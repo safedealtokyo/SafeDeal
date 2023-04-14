@@ -23,8 +23,8 @@ export async function getServerSideProps(context: NextPageContext) {
     return {
       redirect: {
         destination: "/deal",
-        permanent: false,
-      },
+        permanent: false
+      }
     };
   }
   return {
