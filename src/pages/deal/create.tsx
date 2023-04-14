@@ -18,7 +18,7 @@ export default function Protected({ session }: Props) {
       <Center>
         <VStack>
           <Heading>Deal作成ページ</Heading>
-          <DealCollectionForm />
+          <DealCollectionForm session={session} />
         </VStack>
       </Center>
     </Box>
