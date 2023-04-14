@@ -14,6 +14,7 @@ import {
 import { useAddress, useSigner } from "@thirdweb-dev/react";
 import { useState } from "react";
 
+import { Huddle } from "@/components/Huddle";
 import useChat from "@/hooks/useChat";
 
 export default function Home() {
@@ -85,6 +86,12 @@ export default function Home() {
           value={approveAddress}
         />
         <Button onClick={() => approveRequest(approveAddress!)}>Approve</Button>
+      </VStack>
+      <VStack mt="50px">
+        <Text fontSize="2xl" fontWeight="bold">
+          Huddle
+        </Text>
+        <Huddle />
       </VStack>
     </Container>
   );
