@@ -3,7 +3,6 @@ import axios from "axios";
 
 type Props = {
   contractAddress: string;
-  destinationAddress: string;
   buttonLabel: string;
 };
 
