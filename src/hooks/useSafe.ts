@@ -195,9 +195,12 @@ const useSafe = () => {
         safeTransaction,
       );
       const receipt = await executeTxResponse.transactionResponse?.wait();
-
       console.log("Transaction executed:");
-      console.log(`https://goerli.etherscan.io/tx/${receipt.transactionHash}`);
+      if (receipt) {
+        console.log(`https://goerli.etherscan.io/tx/${receipt.transactionHash}`);
+      } else {
+        console.log("failed");
+      }
     }
   };
 
