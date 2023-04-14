@@ -7,6 +7,7 @@ import React, { useEffect, useRef } from "react";
 export type Message = {
   text: string;
   from: string;
+  timestamp?: number;
 };
 type Props = {
   messages: Message[];

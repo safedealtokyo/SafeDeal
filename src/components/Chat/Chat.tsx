@@ -1,5 +1,7 @@
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable no-confusing-arrow */
 /* eslint-disable react/function-component-definition */
-import { Flex } from "@chakra-ui/react";
+import { Button, Flex } from "@chakra-ui/react";
 import { Deal } from "@prisma/client";
 import { useAddress } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
@@ -22,20 +24,52 @@ const Chat: React.FC<Props> = ({ deal }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
 
+  const fetchTargetAddress = () =>
+    address?.toLowerCase() === deal.ownerAddress.toLowerCase()
+      ? (router.query.workerAddress as string)
+      : deal.ownerAddress;
+
   const handleSendMessage = async () => {
     if (!inputMessage.trim().length) {
       return;
     }
     const data = inputMessage;
 
-    await sendChatMessage(data, deal.ownerAddress);
+    await sendChatMessage(data, fetchTargetAddress());
 
-    setMessages((old) => [...old, { from: address!, text: data }]);
+    setMessages((old) => [
+      ...old,
+      {
+        from: address!,
+        text: data,
+        timestamp: new Date().getTime(),
+      },
+    ]);
     setInputMessage("");
+  };
 
-    // setTimeout(() => {
-    //   setMessages((old) => [...old, { from: "computer", text: data }]);
-    // }, 1000);
+  // TODO ポーリング
+  const fetchNewConversion = async () => {
+    const result = await fetchChatConversationOfTwo(
+      address?.toLowerCase() === deal.ownerAddress.toLowerCase()
+        ? (router.query.workerAddress as string)
+        : deal.ownerAddress,
+      "latest"
+    );
+    // @ts-ignore
+    if (result?.[0]?.timestamp > messages[messages.length - 1].timestamp) {
+      console.log("latest", result);
+      if (result) {
+        setMessages((old) => [
+          ...old,
+          {
+            from: result[0].fromDID.replace("eip155:", ""),
+            text: result[0].messageContent,
+            timestamp: result[0].timestamp,
+          },
+        ]);
+      }
+    }
   };
 
   useEffect(() => {
@@ -57,10 +91,13 @@ const Chat: React.FC<Props> = ({ deal }) => {
         }
 
         if (conversionHistory) {
-          const mes: Message[] = conversionHistory.map((message) => ({
-            text: message.messageContent,
-            from: message.fromDID.replace("eip155:", ""),
-          }));
+          const mes: Message[] = conversionHistory
+            .sort((a, b) => (a.timestamp ?? 0) - (b?.timestamp ?? 0))
+            .map((message) => ({
+              text: message.messageContent,
+              from: message.fromDID.replace("eip155:", ""),
+              timestamp: message.timestamp,
+            }));
           setMessages(mes);
         }
       };
@@ -86,6 +123,7 @@ const Chat: React.FC<Props> = ({ deal }) => {
           setInputMessage={setInputMessage}
           handleSendMessage={handleSendMessage}
         />
+        <Button onClick={fetchNewConversion}>Fetch</Button>
       </Flex>
     </Flex>
   );
