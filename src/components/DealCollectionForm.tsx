@@ -8,10 +8,14 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useAddress, useSigner, ConnectWallet } from "@thirdweb-dev/react";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+
+import { formatFormData } from "@/utils/formatJson";
 
 const schema = yup.object().shape({
   title: yup.string().required("案件タイトルは必須です"),
@@ -25,13 +29,19 @@ const schema = yup.object().shape({
 type FormData = yup.InferType<typeof schema>;
 
 export default function DealCollectionForm() {
+  const address = useAddress();
+  const signer = useSigner();
   const { register, handleSubmit, formState } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
+
+  // eslint-disable-next-line consistent-return
   const onSubmit = async (data: FormData) => {
-    console.log(data);
     try {
-      const response = await axios.post("/api/deal/create", data);
+      const response = await axios.post("/api/deal/create", {
+        data,
+        signer,
+      });
       return response.data;
     } catch (error: any) {
       console.error(`Error creating NFT collection: ${error.toString()}`);
@@ -106,13 +116,17 @@ export default function DealCollectionForm() {
               <p>{formState.errors.deliveryDate.message}</p>
             )}
           </FormControl>
-          <Button
-            type="submit"
-            colorScheme="blue"
-            isLoading={formState.isSubmitting}
-          >
-            送信
-          </Button>
+          {!address ? (
+            <ConnectWallet />
+          ) : (
+            <Button
+              type="submit"
+              colorScheme="blue"
+              isLoading={formState.isSubmitting}
+            >
+              送信
+            </Button>
+          )}
         </VStack>
       </form>
     </Box>
