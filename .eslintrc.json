@@ -1,0 +1,80 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "airbnb",
+    "plugin:import/errors",
+    "plugin:import/warnings"
+  ],
+  "plugins": [
+    "import"
+  ],
+  "rules": {
+    // 引用符の設定
+    "quotes": [
+      "warn",
+      "double"
+    ],
+    // Reactのルール
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-filename-extension": [
+      "warn",
+      {
+        "extensions": [
+          ".jsx",
+          ".tsx"
+        ]
+      }
+    ],
+    "react/jsx-props-no-spreading": "off",
+    "react/jsx-one-expression-per-line": [
+      "warn",
+      {
+        "allow": "single-child"
+      }
+    ],
+    "react/no-unused-prop-types": "off",
+    "react/require-default-props": [
+      "error",
+      {
+        "ignoreFunctionalComponents": true
+      }
+    ],
+    // importのルール
+    "import/extensions": "off",
+    "import/order": [
+      "warn",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "import/no-extraneous-dependencies": "off",
+    // その他のルール
+    "no-extra-boolean-cast": "off",
+    "no-use-before-define": "off",
+    "no-param-reassign": "off",
+    "eslint-disable-next-line": "off",
+    "object-curly-newline": [
+      "warn",
+      {
+        "consistent": true
+      }
+    ],
+    "comma-dangle": [
+      "warn",
+      "always-multiline"
+    ],
+    "operator-linebreak": "off"
+  }
+}
