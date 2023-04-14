@@ -1,6 +1,7 @@
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import type { NextApiRequest, NextApiResponse } from "next";
 
+import { multicallData } from "@/datas/multicallData";
 import { formatFormData } from "@/utils/formatJson";
 import { prisma } from "@/utils/prisma";
 
@@ -41,6 +42,7 @@ export default async function handler(
         body.walletAddress
       );
 
+      const tx = await contract.call("multicall", [multicallData]);
       return res.status(200).json({
         contractAddress,
         txResult
