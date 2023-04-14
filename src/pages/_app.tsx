@@ -7,7 +7,9 @@ import { useEffect, useState } from "react";
 import { RecoilRoot } from "recoil";
 
 export default function App({ Component, pageProps }: AppProps) {
-  const [activeChain, setActiveChain] = useState<ChainId.Goerli | ChainId.Polygon>(ChainId.Goerli);
+  const [activeChain, setActiveChain] = useState<
+    ChainId.Goerli | ChainId.Polygon
+  >(ChainId.Goerli);
   useEffect(() => {
     switch (process.env.NEXT_PUBLIC_CHAIN) {
       case "goerli": {
