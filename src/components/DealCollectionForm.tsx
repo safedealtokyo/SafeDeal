@@ -8,42 +8,50 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
-type FormData = {
-  fixedFee: string;
-  jobDetails: string;
-  specialNotes: string;
-  postingDate: string;
-  deliveryDate: string;
-  applicationDeadline: string;
-};
-
 const schema = yup.object().shape({
+  title: yup.string().required("案件タイトルは必須です"),
   fixedFee: yup.string().required("固定報酬は必須です"),
   jobDetails: yup.string().required("仕事の詳細は必須です"),
   specialNotes: yup.string(),
-  postingDate: yup.string().required("掲載日は必須です"),
   deliveryDate: yup.string().required("納品完了日は必須です"),
   applicationDeadline: yup.string().required("応募期限は必須です"),
 });
 
-export default function CustomForm() {
-  const { register, handleSubmit, formState, setValue } = useForm<FormData>({
+type FormData = yup.InferType<typeof schema>;
+
+export default function DealCollectionForm() {
+  const { register, handleSubmit, formState } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
-
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    // setValue<FormData>("postingDate", "");
+  const onSubmit = async (data: FormData) => {
     console.log(data);
+    try {
+      const response = await axios.post("/api/deal/create", data);
+      return response.data;
+    } catch (error: any) {
+      console.error(`Error creating NFT collection: ${error.toString()}`);
+      return null;
+    }
   };
 
   return (
-    <Box>
+    <Box w={{ base: "md" }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <VStack spacing={4}>
+          <FormControl
+            id="title"
+            isInvalid={!!formState.errors.title}
+            isRequired
+          >
+            <FormLabel>案件タイトル</FormLabel>
+            <Input type="text" {...register("title")} />
+            {formState.errors.title && <p>{formState.errors.title.message}</p>}
+          </FormControl>
           <FormControl
             id="fixedFee"
             isInvalid={!!formState.errors.fixedFee}
