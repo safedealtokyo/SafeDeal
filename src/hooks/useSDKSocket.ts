@@ -12,7 +12,7 @@ export type SDKSocketHookOptions = {
 
 export const useSDKSocket = ({
   account,
-  env = "",
+  env = "staging",
   chainId,
   isCAIP,
 }: SDKSocketHookOptions) => {
@@ -91,6 +91,7 @@ export const useSDKSocket = ({
 
       const connectionObject = createSocketConnection({
         user: account,
+        // @ts-ignore
         env,
         socketOptions: { autoConnect: false },
       });
