@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 import { Flex, Avatar, AvatarBadge, Text } from "@chakra-ui/react";
 import React from "react";
 
@@ -7,6 +8,9 @@ type Props = {
   name: string;
 };
 function Header({ name }: Props) {
+  if (!name) {
+    return <></>;
+  }
   return (
     <Flex w="100%">
       <Avatar size="lg" name="Dan Abrahmov" src="https://bit.ly/dan-abramov">

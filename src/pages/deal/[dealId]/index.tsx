@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable react/jsx-one-expression-per-line */
 import { Button, Center, Container, Heading, VStack } from "@chakra-ui/react";
 import {
@@ -30,6 +31,13 @@ type Props = {
 export default function Protected({ session, deal }: Props) {
   const address = useAddress();
   const tempDeal: Deal = JSON.parse(deal);
+  const isClient = () => {
+    if (address) {
+      return address?.toLowerCase() === tempDeal.ownerAddress.toLowerCase();
+    }
+    return false;
+  };
+
   const chatWithClient = () => {
     // Notify to Client
     // Open Chat Modal
@@ -83,11 +91,19 @@ export default function Protected({ session, deal }: Props) {
                 </Tbody>
               </Table>
             </TableContainer>
-            <Link href={`/deal/${tempDeal.id}/chat/${address}`}>
-              <Button width="full" colorScheme="blue" px="5px" mt="10px">
-                Chat with Client
-              </Button>
-            </Link>
+            {isClient() ? (
+              <Link href={`/deal/${tempDeal.id}/chat`}>
+                <Button width="full" colorScheme="blue" px="5px" mt="10px">
+                  Chat with Worker
+                </Button>
+              </Link>
+            ) : (
+              <Link href={`/deal/${tempDeal.id}/chat/${address}`}>
+                <Button width="full" colorScheme="blue" px="5px" mt="10px">
+                  Chat with Client
+                </Button>
+              </Link>
+            )}
           </VStack>
           <ConnectWallet />
         </Center>

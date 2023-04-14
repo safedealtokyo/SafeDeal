@@ -85,20 +85,21 @@ const useChat = () => {
     return chatRequests;
   };
 
-  const fetchListOfUserChats = async (targetAddress: string) => {
+  const fetchListOfUserChats = async () => {
     const user = await fetchUser();
     console.log(user);
 
     const tempPgpDecryptedPvtKey = await fetchPgpDecryptedPvtKey();
     // actual api
-    const chatHistoryLatest = await PushAPI.chat.chats({
+    const chatHistory = await PushAPI.chat.chats({
       account: `eip155:${address}`,
       toDecrypt: true,
       pgpPrivateKey: tempPgpDecryptedPvtKey,
       // @ts-ignore
       env: "staging",
     });
-    console.log(chatHistoryLatest);
+    console.log(chatHistory);
+    return chatHistory;
   };
 
   const fetchChatConversationOfTwo = async (
@@ -141,7 +142,7 @@ const useChat = () => {
       const chatHistory = await PushAPI.chat.history({
         threadhash: conversationHash.threadHash,
         account: `eip155:${address}`,
-        limit: 50,
+        limit: 28,
         toDecrypt: true,
         pgpPrivateKey: tempPgpDecryptedPvtKey,
         // @ts-ignore
