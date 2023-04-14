@@ -74,14 +74,15 @@ const useChat = () => {
 
     const tempPgpDecryptedPvtKey = await fetchPgpDecryptedPvtKey();
     // actual api
-    const chatHistoryLatest = await PushAPI.chat.requests({
+    const chatRequests = await PushAPI.chat.requests({
       account: `eip155:${address}`,
       toDecrypt: true,
       pgpPrivateKey: tempPgpDecryptedPvtKey,
       // @ts-ignore
       env: "staging",
     });
-    console.log(chatHistoryLatest);
+    console.log(chatRequests);
+    return chatRequests;
   };
 
   const fetchListOfUserChats = async (targetAddress: string) => {
@@ -151,8 +152,20 @@ const useChat = () => {
     }
   };
 
+  const approveRequest = async (targetAddress: string) => {
+    const response = await PushAPI.chat.approve({
+      status: "Approved",
+      account: address,
+      senderAddress: targetAddress,
+      // @ts-ignore
+      env: "staging",
+    });
+    console.log(response);
+  };
+
   return {
     sendChatMessage,
+    approveRequest,
     fetchListOfUserChats,
     fetchChatConversationOfTwo,
     fetchListOfUserChatRequest,

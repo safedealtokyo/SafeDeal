@@ -23,10 +23,12 @@ export default function Home() {
   const [typemessage, setTypemessage] = useState<string>();
 
   const [targetAddress, setTargetAddress] = useState<string>();
+  const [approveAddress, setApproveAddress] = useState<string>();
   const {
     fetchListOfUserChatRequest,
     fetchChatConversationOfTwo,
     sendChatMessage,
+    approveRequest,
   } = useChat();
 
   return (
@@ -48,7 +50,14 @@ export default function Home() {
           onChange={(e) => setTypemessage(e.target.value)}
         />
         <HStack>
-          <Button onClick={() => fetchListOfUserChatRequest(targetAddress!)}>
+          <Button
+            onClick={async () => {
+              const requests = await fetchListOfUserChatRequest(targetAddress!);
+              if (requests.length > 0) {
+                setApproveAddress(requests[0].wallets.replace("eip155:", ""));
+              }
+            }}
+          >
             Fetch Request
           </Button>
           <Button
@@ -67,6 +76,15 @@ export default function Home() {
             Send
           </Button>
         </HStack>
+      </VStack>
+      <VStack>
+        <Text>Approve Request</Text>
+        <Input
+          placeholder="approve request address"
+          // onChange={(e) => setApproveAddress(e.target.value)}
+          value={approveAddress}
+        />
+        <Button onClick={() => approveRequest(approveAddress!)}>Approve</Button>
       </VStack>
     </Container>
   );
