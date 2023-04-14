@@ -64,6 +64,7 @@
     "no-extra-boolean-cast": "off",
     "no-use-before-define": "off",
     "no-param-reassign": "off",
+    "no-unused-vars": "off",
     "eslint-disable-next-line": "off",
     "object-curly-newline": [
       "warn",

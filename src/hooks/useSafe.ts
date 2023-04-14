@@ -2,28 +2,39 @@
 /* eslint-disable no-alert */
 /* eslint-disable consistent-return */
 import SafeApiKit from "@safe-global/api-kit";
-import Safe, { EthersAdapter, SafeAccountConfig, SafeFactory } from "@safe-global/protocol-kit";
+import Safe, {
+  EthersAdapter,
+  SafeAccountConfig,
+  SafeFactory,
+} from "@safe-global/protocol-kit";
 import { SafeTransactionDataPartial } from "@safe-global/safe-core-sdk-types";
 import { useAddress, useSigner } from "@thirdweb-dev/react";
 import ethers from "ethers";
+import { useState } from "react";
 
 const useSafe = () => {
   const address = useAddress();
   const signer = useSigner();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Base hooks
   const fetchSafeService = () => {
-    if (signer) {
-      const ethAdapterOwner1 = new EthersAdapter({
-        ethers,
-        signerOrProvider: signer,
-      });
-      const txServiceUrl = "https://safe-transaction-goerli.safe.global";
-      const safeService = new SafeApiKit({
-        txServiceUrl,
-        ethAdapter: ethAdapterOwner1,
-      });
-      return safeService;
+    try {
+      setIsLoading(true);
+      if (signer) {
+        const ethAdapterOwner1 = new EthersAdapter({
+          ethers,
+          signerOrProvider: signer,
+        });
+        const txServiceUrl = "https://safe-transaction-goerli.safe.global";
+        const safeService = new SafeApiKit({
+          txServiceUrl,
+          ethAdapter: ethAdapterOwner1,
+        });
+        return safeService;
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
   const fetchSafe = async () => {
@@ -49,70 +60,86 @@ const useSafe = () => {
   };
 
   // Create safe multisig contract for deposit.
-  const deploySafe = async (workerAddress: string, depositEthAmount: string) => {
-    if (signer) {
-      const ethAdapterOwner1 = new EthersAdapter({
-        ethers,
-        signerOrProvider: signer,
-      });
+  const deploySafe = async (
+    workerAddress: string,
+    depositEthAmount: string,
+  ) => {
+    try {
+      setIsLoading(true);
+      if (signer) {
+        const ethAdapterOwner1 = new EthersAdapter({
+          ethers,
+          signerOrProvider: signer,
+        });
 
-      //   Initialize the Protcol Kit
-      const safeFactory = await SafeFactory.create({
-        ethAdapter: ethAdapterOwner1,
-      });
+        //   Initialize the Protcol Kit
+        const safeFactory = await SafeFactory.create({
+          ethAdapter: ethAdapterOwner1,
+        });
 
-      // Set Owners
-      const safeAccountConfig: SafeAccountConfig = {
-        owners: [
+        // Set Owners
+        const safeAccountConfig: SafeAccountConfig = {
+          owners: [
           address as string,
           workerAddress,
           process.env.NEXT_PUBLIC_OWNER_ADDRESS!, // Owner Address
-        ],
-        threshold: 2,
-      };
-      const safeSdkOwner1 = await safeFactory.deploySafe({ safeAccountConfig });
+          ],
+          threshold: 2,
+        };
+        const safeSdkOwner1 = await safeFactory.deploySafe({ safeAccountConfig });
 
-      const safeAddress = safeSdkOwner1.getAddress();
-      console.log("Your Safe has been deployed:");
-      console.log(`https://goerli.etherscan.io/address/${safeAddress}`);
-      console.log(`https://app.safe.global/gor:${safeAddress}`);
-      sendEthToSafe(safeAddress, depositEthAmount);
-    } else {
-      alert("Wallet not connected");
+        const safeAddress = safeSdkOwner1.getAddress();
+        console.log("Your Safe has been deployed:");
+        console.log(`https://goerli.etherscan.io/address/${safeAddress}`);
+        console.log(`https://app.safe.global/gor:${safeAddress}`);
+        sendEthToSafe(safeAddress, depositEthAmount);
+      } else {
+        alert("Wallet not connected");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const proposeTransaction = async (destinationAddress: string, withdrawAmount: string) => {
-    // Any address can be used. In this example you will use vitalik.eth
-    const destination = destinationAddress;
-    const amount = ethers.utils.parseUnits(withdrawAmount, "ether").toString();
-    const safeService = fetchSafeService();
-    const safeSdk = await fetchSafeSDK();
-    const safeTransactionData: SafeTransactionDataPartial = {
-      to: destination,
-      data: "0x",
-      value: amount,
-    };
+  const proposeTransaction = async (
+    destinationAddress: string,
+    withdrawAmount: string,
+  ) => {
+    try {
+      setIsLoading(true);
+      // Any address can be used. In this example you will use vitalik.eth
+      const destination = destinationAddress;
+      const amount = ethers.utils.parseUnits(withdrawAmount, "ether").toString();
+      const safeService = fetchSafeService();
+      const safeSdk = await fetchSafeSDK();
+      const safeTransactionData: SafeTransactionDataPartial = {
+        to: destination,
+        data: "0x",
+        value: amount,
+      };
 
-    if (signer && address && safeService && safeSdk) {
+      if (signer && address && safeService && safeSdk) {
       // Create a Safe transaction with the provided parameters
-      const safeTransaction = await safeSdk.createTransaction({
-        safeTransactionData,
-      });
+        const safeTransaction = await safeSdk.createTransaction({
+          safeTransactionData,
+        });
 
-      // Deterministic hash based on transaction parameters
-      const safeTxHash = await safeSdk.getTransactionHash(safeTransaction);
+        // Deterministic hash based on transaction parameters
+        const safeTxHash = await safeSdk.getTransactionHash(safeTransaction);
 
-      // Sign transaction to verify that the transaction is coming from owner 1
-      const senderSignature = await safeSdk.signTransactionHash(safeTxHash);
-      const safeAddress = await fetchSafe();
-      await safeService.proposeTransaction({
-        safeAddress: safeAddress!,
-        safeTransactionData: safeTransaction.data,
-        safeTxHash,
-        senderAddress: address,
-        senderSignature: senderSignature.data,
-      });
+        // Sign transaction to verify that the transaction is coming from owner 1
+        const senderSignature = await safeSdk.signTransactionHash(safeTxHash);
+        const safeAddress = await fetchSafe();
+        await safeService.proposeTransaction({
+          safeAddress: safeAddress!,
+          safeTransactionData: safeTransaction.data,
+          safeTxHash,
+          senderAddress: address,
+          senderSignature: senderSignature.data,
+        });
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -133,25 +160,27 @@ const useSafe = () => {
 
   // Confirm proposed transaction
   const confirmTransaction = async () => {
-    const safeService = fetchSafeService();
-    const safeAddress = await fetchSafe();
-    const safeTxHash = await fetchPendingTransactionHash();
-    if (safeService && signer && safeTxHash && safeAddress) {
-      const ethAdapterOwner = new EthersAdapter({
-        ethers,
-        signerOrProvider: signer,
-      });
+    try {
+      setIsLoading(true);
+      const safeService = fetchSafeService();
+      const safeAddress = await fetchSafe();
+      const safeTxHash = await fetchPendingTransactionHash();
+      if (safeService && signer && safeTxHash && safeAddress) {
+        const ethAdapterOwner = new EthersAdapter({
+          ethers,
+          signerOrProvider: signer,
+        });
 
-      const safeSdkOwner = await Safe.create({
-        ethAdapter: ethAdapterOwner,
-        safeAddress,
-      });
+        const safeSdkOwner = await Safe.create({
+          ethAdapter: ethAdapterOwner,
+          safeAddress,
+        });
 
-      const signature = await safeSdkOwner.signTransactionHash(safeTxHash);
-      await safeService.confirmTransaction(
-        safeTxHash,
-        signature.data,
-      );
+        const signature = await safeSdkOwner.signTransactionHash(safeTxHash);
+        await safeService.confirmTransaction(safeTxHash, signature.data);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -173,9 +202,14 @@ const useSafe = () => {
   };
 
   // Deposit ether to safe address.
-  const sendEthToSafe = async (safeAddress: string, depositEthAmount: string) => {
+  const sendEthToSafe = async (
+    safeAddress: string,
+    depositEthAmount: string,
+  ) => {
     if (signer) {
-      const safeAmount = ethers.utils.parseUnits(depositEthAmount, "ether").toHexString();
+      const safeAmount = ethers.utils
+        .parseUnits(depositEthAmount, "ether")
+        .toHexString();
 
       const transactionParameters = {
         to: safeAddress,
@@ -192,7 +226,10 @@ const useSafe = () => {
   };
 
   // Reject safe proposed tx
-  const rejectTransaction = async (destinationAddress: string, withdrawAmount: string) => {
+  const rejectTransaction = async (
+    destinationAddress: string,
+    withdrawAmount: string,
+  ) => {
     const destination = destinationAddress;
     const amount = ethers.utils.parseUnits(withdrawAmount, "ether").toString();
     const safeService = fetchSafeService();
@@ -218,6 +255,7 @@ const useSafe = () => {
   };
 
   return {
+    isLoading,
     deploySafe,
     proposeTransaction,
     confirmTransaction,
