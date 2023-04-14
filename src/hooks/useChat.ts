@@ -14,14 +14,14 @@ const useChat = () => {
       let user = await PushAPI.user.get({
         account: `eip155:${address}`,
         // @ts-ignore
-        env: "staging"
+        env: "staging",
       });
       // ユーザーが作成されているけど公開鍵が登録されていない場合は再度権限が必要
       if (!user || !user.encryptedPrivateKey) {
         user = await PushAPI.user.create({
           account: address,
           // @ts-ignore
-          env: "staging"
+          env: "staging",
         });
       }
       return user;
@@ -43,7 +43,7 @@ const useChat = () => {
         encryptedPGPPrivateKey: user.encryptedPrivateKey,
         signer: signer as PushAPI.SignerType,
         // @ts-ignore
-        env: "staging"
+        env: "staging",
       });
       setPgpDecryptedPvtKey(tempPgpDecryptedPvtKey);
       return tempPgpDecryptedPvtKey;
@@ -63,7 +63,7 @@ const useChat = () => {
       signer: signer as PushAPI.SignerType,
       pgpPrivateKey: tempPgpDecryptedPvtKey,
       // @ts-ignore
-      env: "staging"
+      env: "staging",
     });
     console.log("response", response);
   };
@@ -79,26 +79,27 @@ const useChat = () => {
       toDecrypt: true,
       pgpPrivateKey: tempPgpDecryptedPvtKey,
       // @ts-ignore
-      env: "staging"
+      env: "staging",
     });
     console.log(chatRequests);
     return chatRequests;
   };
 
-  const fetchListOfUserChats = async (targetAddress: string) => {
+  const fetchListOfUserChats = async () => {
     const user = await fetchUser();
     console.log(user);
 
     const tempPgpDecryptedPvtKey = await fetchPgpDecryptedPvtKey();
     // actual api
-    const chatHistoryLatest = await PushAPI.chat.chats({
+    const chatHistory = await PushAPI.chat.chats({
       account: `eip155:${address}`,
       toDecrypt: true,
       pgpPrivateKey: tempPgpDecryptedPvtKey,
       // @ts-ignore
-      env: "staging"
+      env: "staging",
     });
-    console.log(chatHistoryLatest);
+    console.log(chatHistory);
+    return chatHistory;
   };
 
   const fetchChatConversationOfTwo = async (
@@ -115,7 +116,7 @@ const useChat = () => {
       account: `eip155:${address}`,
       conversationId: `eip155:${targetAddress}`, // receiver's address or chatId of a group
       // @ts-ignore
-      env: "staging"
+      env: "staging",
     });
     console.log(conversationHash);
     if (!conversationHash.threadHash) {
@@ -131,7 +132,7 @@ const useChat = () => {
         toDecrypt: true,
         pgpPrivateKey: tempPgpDecryptedPvtKey,
         // @ts-ignore
-        env: "staging"
+        env: "staging",
       });
       console.log(chatHistoryLatest);
       return chatHistoryLatest;
@@ -141,11 +142,11 @@ const useChat = () => {
       const chatHistory = await PushAPI.chat.history({
         threadhash: conversationHash.threadHash,
         account: `eip155:${address}`,
-        limit: 3,
+        limit: 28,
         toDecrypt: true,
         pgpPrivateKey: tempPgpDecryptedPvtKey,
         // @ts-ignore
-        env: "staging"
+        env: "staging",
       });
       console.log(chatHistory);
       return chatHistory;
@@ -158,7 +159,7 @@ const useChat = () => {
       account: address,
       senderAddress: targetAddress,
       // @ts-ignore
-      env: "staging"
+      env: "staging",
     });
     console.log(response);
   };
@@ -168,7 +169,7 @@ const useChat = () => {
     approveRequest,
     fetchListOfUserChats,
     fetchChatConversationOfTwo,
-    fetchListOfUserChatRequest
+    fetchListOfUserChatRequest,
   };
 };
 
