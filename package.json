@@ -19,6 +19,7 @@
     "@huddle01/huddle01-iframe": "^0.0.9",
     "@huddle01/react": "^0.0.6",
     "@pushprotocol/restapi": "^1.2.2",
+    "@pushprotocol/socket": "^0.4.2",
     "@safe-global/api-kit": "^1.0.1",
     "@safe-global/auth-kit": "^0.1.1",
     "@safe-global/protocol-kit": "^0.1.1",
