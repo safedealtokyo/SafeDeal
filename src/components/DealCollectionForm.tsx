@@ -11,6 +11,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useAccount } from "wagmi";
 import * as yup from "yup";
 
 const schema = yup.object().shape({
@@ -20,11 +21,14 @@ const schema = yup.object().shape({
   specialNotes: yup.string(),
   deliveryDate: yup.string().required("納品完了日は必須です"),
   applicationDeadline: yup.string().required("応募期限は必須です"),
+  walletAddress: yup.string().required("ウォレットは必須です"),
 });
 
 type FormData = yup.InferType<typeof schema>;
 
 export default function DealCollectionForm() {
+  const [{ data: account }] = useAccount();
+
   const { register, handleSubmit, formState } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
@@ -104,6 +108,23 @@ export default function DealCollectionForm() {
             <Input type="date" {...register("deliveryDate")} />
             {formState.errors.deliveryDate && (
               <p>{formState.errors.deliveryDate.message}</p>
+            )}
+          </FormControl>
+          <FormControl
+            id="walletAddress"
+            isInvalid={!!formState.errors.walletAddress}
+            isRequired
+          >
+            <FormLabel>ウォレットアドレス</FormLabel>
+            <Input
+              type="text"
+              defaultValue={account ? account.address : ""}
+              value={account ? account.address : ""}
+              isReadOnly
+              {...register("walletAddress")}
+            />
+            {formState.errors.walletAddress && (
+              <p>{formState.errors.walletAddress.message}</p>
             )}
           </FormControl>
           <Button

@@ -11,15 +11,15 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Project {
+model Deal {
   id                  String   @id @default(cuid())
   ownerAddress        String
   contractAddress     String
-  multiSigAddress     String
+  multiSigAddress     String?
   title               String
   fixedFee            String
-  description         String
-  notes               String
+  jobDetails          String
+  specialNotes        String?
   applicationDeadline DateTime
   deliveryDate        DateTime
   createdAt           DateTime @default(now())
@@ -32,12 +32,12 @@ model Worker {
   walletAddress String
   userId        String
   worker        User     @relation(fields: [userId], references: [id])
-  projectId     String
-  project       Project  @relation(fields: [projectId], references: [id])
+  dealId        String
+  deal          Deal     @relation(fields: [dealId], references: [id])
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  @@index([projectId])
+  @@index([dealId])
   @@index([userId])
 }
 
