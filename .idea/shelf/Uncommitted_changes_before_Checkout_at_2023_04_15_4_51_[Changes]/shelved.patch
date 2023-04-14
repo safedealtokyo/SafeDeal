@@ -1,0 +1,37 @@
+Index: src/pages/index.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { Box } from \"@chakra-ui/react\";\nimport { NextPageContext } from \"next\";\nimport { getSession } from \"next-auth/react\";\n\nimport Navbar from \"@/components/Navbar\";\nimport { UserSession } from \"@/types/UserSession\";\n\ntype Props = {\n  session: UserSession;\n};\n\nexport default function Home({ session }: Props) {\n  return (\n    <Box>\n      <Navbar session={session} />\n    </Box>\n  );\n}\n\nexport async function getServerSideProps(context: NextPageContext) {\n  const session = await getSession(context);\n  if (session) {\n    return {\n      redirect: {\n        destination: \"/protected\",\n        permanent: false\n      }\n    };\n  }\n  return {\n    props: {\n      session\n    }\n  };\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/pages/index.tsx b/src/pages/index.tsx
+--- a/src/pages/index.tsx	(revision a943014a5130d603639882656a331da0c1e96907)
++++ b/src/pages/index.tsx	(date 1681501853055)
+@@ -22,7 +22,7 @@
+   if (session) {
+     return {
+       redirect: {
+-        destination: "/protected",
++        destination: "/deal",
+         permanent: false
+       }
+     };
+Index: .env
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>NEXT_PUBLIC_OWNER_ADDRESS=0x62B4C62559DC999523D89a72056e3D0AbD2B0ea7\nNEXT_AUTH_SECRET=\"eE*szYpDH@r.647zq*Vxd9vW..X!\"\nJWT_SECRET=\"R9Hkbi2Ahoy9wNQH*7Jj4a*Y4NxF\"\nNEXT_PUBLIC_CHAIN_ID=\"0x5\"\nNEXT_PUBLIC_CHAIN=goerli\nNEXT_PUBLIC_PRIMARIY_SALES_ADDRESS=\"0x62B4C62559DC999523D89a72056e3D0AbD2B0ea7\"\nPRIVATE_KEY=\"\"\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.env b/.env
+--- a/.env	(revision a943014a5130d603639882656a331da0c1e96907)
++++ b/.env	(date 1681496708796)
+@@ -4,5 +4,5 @@
+ NEXT_PUBLIC_CHAIN_ID="0x5"
+ NEXT_PUBLIC_CHAIN=goerli
+ NEXT_PUBLIC_PRIMARIY_SALES_ADDRESS="0x62B4C62559DC999523D89a72056e3D0AbD2B0ea7"
+-PRIVATE_KEY=""
+-
++PRIVATE_KEY="568ab4c2cc3455761db3792cb64d0da8ee3420bd67a2f279e9b0748c23572108"
++DATABASE_URL='mysql://tcz425946xjxuynmna89:pscale_pw_LA1LPLhDctz6IeR3GXf7uzHyBRNrqLH0hK47hLfV8zy@aws.connect.psdb.cloud/safedealtokyo?sslaccept=strict'
