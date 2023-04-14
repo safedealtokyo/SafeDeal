@@ -36,7 +36,6 @@ export default function CustomForm() {
   });
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    setValue<FormData>("postingDate", "");
     console.log(data);
   };
 
