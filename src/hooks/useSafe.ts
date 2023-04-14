@@ -9,7 +9,7 @@ import Safe, {
 } from "@safe-global/protocol-kit";
 import { SafeTransactionDataPartial } from "@safe-global/safe-core-sdk-types";
 import { useAddress, useSigner } from "@thirdweb-dev/react";
-import ethers from "ethers";
+import ethers, { BigNumber } from "ethers";
 import { useState } from "react";
 
 const useSafe = () => {
@@ -62,7 +62,7 @@ const useSafe = () => {
   // Create safe multisig contract for deposit.
   const deploySafe = async (
     workerAddress: string,
-    depositEthAmount: string,
+    depositEthAmount: string
   ) => {
     try {
       setIsLoading(true);
@@ -80,13 +80,15 @@ const useSafe = () => {
         // Set Owners
         const safeAccountConfig: SafeAccountConfig = {
           owners: [
-          address as string,
-          workerAddress,
-          process.env.NEXT_PUBLIC_OWNER_ADDRESS!, // Owner Address
+            address as string,
+            workerAddress,
+            process.env.NEXT_PUBLIC_OWNER_ADDRESS!, // Owner Address
           ],
           threshold: 2,
         };
-        const safeSdkOwner1 = await safeFactory.deploySafe({ safeAccountConfig });
+        const safeSdkOwner1 = await safeFactory.deploySafe({
+          safeAccountConfig,
+        });
 
         const safeAddress = safeSdkOwner1.getAddress();
         console.log("Your Safe has been deployed:");
@@ -101,25 +103,32 @@ const useSafe = () => {
     }
   };
 
-  const proposeTransaction = async (
-    destinationAddress: string,
-    withdrawAmount: string,
-  ) => {
+  const proposeTransaction = async () => {
     try {
       setIsLoading(true);
       // Any address can be used. In this example you will use vitalik.eth
-      const destination = destinationAddress;
-      const amount = ethers.utils.parseUnits(withdrawAmount, "ether").toString();
-      const safeService = fetchSafeService();
+      // TODO 取得するコントラクトアカウントの指定
       const safeSdk = await fetchSafeSDK();
+      // Any address can be used. In this example you will use vitalik.eth
+      const destination = address;
+      console.log("destination:", destination);
+      const amount = ethers.utils
+        .parseUnits(
+          String(
+            ethers.utils.formatEther((await safeSdk?.getBalance()) as BigNumber)
+          ),
+          "ether"
+        )
+        .toString();
+      const safeService = fetchSafeService();
       const safeTransactionData: SafeTransactionDataPartial = {
-        to: destination,
+        to: destination!,
         data: "0x",
         value: amount,
       };
 
       if (signer && address && safeService && safeSdk) {
-      // Create a Safe transaction with the provided parameters
+        // Create a Safe transaction with the provided parameters
         const safeTransaction = await safeSdk.createTransaction({
           safeTransactionData,
         });
@@ -149,7 +158,7 @@ const useSafe = () => {
     const safeAddress = await fetchSafe();
     if (safeService && signer && safeAddress) {
       const pendingTransactions = await safeService.getPendingTransactions(
-        safeAddress,
+        safeAddress
       );
       // Assumes that the first pending transaction is the transaction you want to confirm
       const transaction = pendingTransactions.results[0];
@@ -178,6 +187,7 @@ const useSafe = () => {
 
         const signature = await safeSdkOwner.signTransactionHash(safeTxHash);
         await safeService.confirmTransaction(safeTxHash, signature.data);
+        await executeTransaction();
       }
     } finally {
       setIsLoading(false);
@@ -192,12 +202,15 @@ const useSafe = () => {
     if (safeService && safeSdk && safeTxHash) {
       const safeTransaction = await safeService.getTransaction(safeTxHash);
       const executeTxResponse = await safeSdk.executeTransaction(
-        safeTransaction,
+        safeTransaction
       );
       const receipt = await executeTxResponse.transactionResponse?.wait();
+
       console.log("Transaction executed:");
       if (receipt) {
-        console.log(`https://goerli.etherscan.io/tx/${receipt.transactionHash}`);
+        console.log(
+          `https://goerli.etherscan.io/tx/${receipt.transactionHash}`
+        );
       } else {
         console.log("failed");
       }
@@ -207,7 +220,7 @@ const useSafe = () => {
   // Deposit ether to safe address.
   const sendEthToSafe = async (
     safeAddress: string,
-    depositEthAmount: string,
+    depositEthAmount: string
   ) => {
     if (signer) {
       const safeAmount = ethers.utils
@@ -223,7 +236,7 @@ const useSafe = () => {
 
       console.log("Fundraising.");
       console.log(
-        `Deposit Transaction: https://goerli.etherscan.io/tx/${tx.hash}`,
+        `Deposit Transaction: https://goerli.etherscan.io/tx/${tx.hash}`
       );
     }
   };
@@ -231,7 +244,7 @@ const useSafe = () => {
   // Reject safe proposed tx
   const rejectTransaction = async (
     destinationAddress: string,
-    withdrawAmount: string,
+    withdrawAmount: string
   ) => {
     const destination = destinationAddress;
     const amount = ethers.utils.parseUnits(withdrawAmount, "ether").toString();
@@ -248,7 +261,7 @@ const useSafe = () => {
         safeTransactionData,
       });
       const rejectTx = await safeSdk.createRejectionTransaction(
-        safeTransaction.data.nonce,
+        safeTransaction.data.nonce
       );
 
       const executeTxResponse = await safeSdk.executeTransaction(rejectTx);
