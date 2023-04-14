@@ -19,7 +19,7 @@ export default async function handler(
       // TODO: あとで変える
       const metadata = {
         name: "実績証明",
-        description: "実績証明",
+        description: "実績証明"
       };
       const contract = await sdk.getContract(contractAddress);
       const txResult = await contract.erc721.mintTo(

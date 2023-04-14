@@ -41,7 +41,7 @@ export default async function handler(
         user: `eip155:5:${address}`, // user address in CAIP
         raw: true,
         // @ts-ignore
-        env: "staging",
+        env: "staging"
       });
       const parsedResults = PushAPI.utils.parseApiResponse(notifications);
       console.log(parsedResults);
@@ -64,17 +64,17 @@ const sendBroadcast = async (
       identityType: 2,
       notification: {
         title: "Safe Deal Notify",
-        body: "Safe Deal Notify Body",
+        body: "Safe Deal Notify Body"
       },
       payload: {
         title: title as string,
         body: message as string,
         cta: "",
-        img: "",
+        img: ""
       },
       channel: `eip155:5:${process.env.NEXT_PUBLIC_PUSH_CHANNEL}`,
       // @ts-ignore
-      env: "staging",
+      env: "staging"
     });
   } catch (err) {
     console.error("Error: ", err);
@@ -97,18 +97,18 @@ const sendSubset = async (
       identityType: 2, // direct payload
       notification: {
         title: "Safe Deal Notify",
-        body: "Safe Deal Notify Body",
+        body: "Safe Deal Notify Body"
       },
       payload: {
         title: title as string,
         body: message as string,
         cta: "",
-        img: "",
+        img: ""
       },
       recipients: recips, // recipients addresses
       channel: `eip155:5:${process.env.NEXT_PUBLIC_PUSH_CHANNEL}`, // your channel address
       // @ts-ignore
-      env: "staging",
+      env: "staging"
     });
   } catch (err) {
     console.error("Error: ", err);
@@ -128,18 +128,18 @@ const sendTarget = async (
       identityType: 2, // direct payload
       notification: {
         title: "Safe Deal Notify",
-        body: "Safe Deal Notify Body",
+        body: "Safe Deal Notify Body"
       },
       payload: {
         title: title as string,
         body: message as string,
         cta: "",
-        img: "",
+        img: ""
       },
       recipients: `eip155:5:${recipient}`, // recipients addresses
       channel: `eip155:5:${process.env.NEXT_PUBLIC_PUSH_CHANNEL}`, // your channel address
       // @ts-ignore
-      env: "staging",
+      env: "staging"
     });
   } catch (err) {
     console.error("Error: ", err);

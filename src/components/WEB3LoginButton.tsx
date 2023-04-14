@@ -1,28 +1,30 @@
 import { Button } from "@chakra-ui/react";
+import { useAddress, useMetamask } from "@thirdweb-dev/react";
 import { signIn } from "next-auth/react";
-import { useConnect, useAccount } from "wagmi";
+import { useEffect } from "react";
 
 export default function Web3LoginButton() {
-  const [{ data: connectData }, connect] = useConnect();
-  const [{ data: accountData }] = useAccount();
+  const address = useAddress();
+  const connectWithMetamask = useMetamask();
 
   const handleLogin = async () => {
     try {
-      const callbackUrl = "/protected";
-      if (accountData?.address) {
-        await signIn("credentials", {
-          address: accountData.address,
-          callbackUrl,
-        });
+      if (!address) {
+        await connectWithMetamask();
         return;
       }
-      const { data } = await connect(connectData.connectors[0]);
-      await signIn("credentials", { address: data?.account, callbackUrl });
     } catch (error) {
       console.log(error);
       window.alert("error");
     }
   };
+
+  useEffect(() => {
+    if (address) {
+      const callbackUrl = "/protected";
+      signIn("credentials", { address, callbackUrl });
+    }
+  }, [address]);
 
   return (
     <Button
@@ -36,10 +38,10 @@ export default function Web3LoginButton() {
       bg="pink.400"
       href="#"
       _hover={{
-        bg: "pink.300",
+        bg: "pink.300"
       }}
     >
-      {accountData?.address ? "Sign In with Wallet" : "Connect Wallet"}
+      {address ? "Sign In with Wallet" : "Connect Wallet"}
     </Button>
   );
 }

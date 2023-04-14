@@ -18,7 +18,7 @@ export default function Protected({ session }: Props) {
       <Center>
         <VStack>
           <Heading>Deal作成ページ</Heading>
-          <DealCollectionForm />
+          <DealCollectionForm session={session} />
         </VStack>
       </Center>
     </Box>
@@ -31,13 +31,13 @@ export async function getServerSideProps(context: NextPageContext) {
     return {
       redirect: {
         destination: "/",
-        permanent: false,
-      },
+        permanent: false
+      }
     };
   }
   return {
     props: {
-      session,
-    },
+      session
+    }
   };
 }

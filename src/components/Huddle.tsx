@@ -21,7 +21,7 @@ export function Huddle() {
     roomUrl: `https://iframe.huddle01.com/${roomId}`,
     height: "800px",
     width: "1000px",
-    noBorder: false,
+    noBorder: false
   });
   const videoRef = useRef<HTMLVideoElement>(null);
   const { state, send } = useMeetingMachine();

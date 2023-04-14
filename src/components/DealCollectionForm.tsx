@@ -5,14 +5,15 @@ import {
   FormLabel,
   Input,
   Textarea,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useAccount } from "wagmi";
 import * as yup from "yup";
+
+import { UserSession } from "@/types/UserSession";
 
 const schema = yup.object().shape({
   title: yup.string().required("案件タイトルは必須です"),
@@ -21,16 +22,19 @@ const schema = yup.object().shape({
   specialNotes: yup.string(),
   deliveryDate: yup.string().required("納品完了日は必須です"),
   applicationDeadline: yup.string().required("応募期限は必須です"),
-  walletAddress: yup.string().required("ウォレットは必須です"),
+  walletAddress: yup.string().required("ウォレットは必須です")
 });
 
 type FormData = yup.InferType<typeof schema>;
 
-export default function DealCollectionForm() {
-  const [{ data: account }] = useAccount();
+type Props = {
+  session: UserSession;
+};
 
+export default function DealCollectionForm({ session }: Props) {
+  const address :string = session?.address;
   const { register, handleSubmit, formState } = useForm<FormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema)
   });
   const onSubmit = async (data: FormData) => {
     console.log(data);
@@ -113,13 +117,12 @@ export default function DealCollectionForm() {
           <FormControl
             id="walletAddress"
             isInvalid={!!formState.errors.walletAddress}
-            isRequired
           >
-            <FormLabel>ウォレットアドレス</FormLabel>
+            <FormLabel>あなたのウォレットアドレス</FormLabel>
             <Input
               type="text"
-              defaultValue={account ? account.address : ""}
-              value={account ? account.address : ""}
+              defaultValue={address || ""}
+              value={address || ""}
               isReadOnly
               {...register("walletAddress")}
             />

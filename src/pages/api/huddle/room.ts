@@ -7,13 +7,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       "https://iriko.testing.huddle01.com/api/v1/create-iframe-room",
       {
         title: "Huddle01-Test",
-        roomLocked: true,
+        roomLocked: true
       },
       {
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": process.env.HUDDLE_API_KEY,
-        },
+          "x-api-key": process.env.HUDDLE_API_KEY
+        }
       }
     );
 

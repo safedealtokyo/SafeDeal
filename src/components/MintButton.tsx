@@ -10,7 +10,7 @@ export default function MintButton({ contractAddress, buttonLabel }: Props) {
   const mint = async () => {
     try {
       const response = await axios.post("/api/deal/mint", {
-        contractAddress,
+        contractAddress
       });
       return response.data;
     } catch (error: any) {
@@ -31,7 +31,7 @@ export default function MintButton({ contractAddress, buttonLabel }: Props) {
       bg="pink.400"
       href="#"
       _hover={{
-        bg: "pink.300",
+        bg: "pink.300"
       }}
     >
       {buttonLabel}
