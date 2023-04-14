@@ -36,7 +36,7 @@ export default async function handler(
         }
       });
 
-      const contract = await sdk.getContract(contractAddress, "nft-collection");
+      const contract = await sdk.getContract(contractAddress);
       const txResult = await contract.roles.grant(
         "minter",
         body.walletAddress
