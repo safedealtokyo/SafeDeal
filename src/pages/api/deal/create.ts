@@ -5,21 +5,22 @@ import { formatFormData } from "@/utils/formatJson";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ) {
   const { body } = req;
   if (req.method === "POST") {
-    const sdk = ThirdwebSDK.fromPrivateKey(
-      process.env.PRIVATE_KEY!,
-      process.env.NEXT_PUBLIC_CHAIN!,
-    );
-    const options = {
-      name: body.title,
-      description: formatFormData(body).toString(),
-      primary_sale_recipient: process.env.NEXT_PUBLIC_PRIMARIY_SALES_ADDRESS!,
-    };
-    const contractAddress = await sdk.deployer.deployNFTCollection(options);
     try {
+      const sdk = ThirdwebSDK.fromPrivateKey(
+        process.env.PRIVATE_KEY!,
+        process.env.NEXT_PUBLIC_CHAIN!
+      );
+      const options = {
+        name: body.title,
+        description: formatFormData(body).toString(),
+        primary_sale_recipient: process.env.NEXT_PUBLIC_PRIMARIY_SALES_ADDRESS!,
+      };
+      const contractAddress = await sdk.deployer.deployNFTCollection(options);
+
       return res.status(200).json(contractAddress);
     } catch (error) {
       console.log(error);

@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "yarn eslint:fix && yarn format && next dev",
-    "build": "yarn eslint:fix && yarn format && next build",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "eslint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
