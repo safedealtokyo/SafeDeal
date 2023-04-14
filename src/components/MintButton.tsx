@@ -7,16 +7,11 @@ type Props = {
   buttonLabel: string;
 };
 
-export default function MintButton({
-  contractAddress,
-  destinationAddress,
-  buttonLabel,
-}: Props) {
+export default function MintButton({ contractAddress, buttonLabel }: Props) {
   const mint = async () => {
     try {
       const response = await axios.post("/api/deal/mint", {
         contractAddress,
-        destinationAddress,
       });
       return response.data;
     } catch (error: any) {
