@@ -1,3 +1,5 @@
+// noinspection TypeScriptValidateTypes
+
 import {
   HamburgerIcon,
   CloseIcon,
@@ -89,6 +91,7 @@ function DesktopNav() {
   const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
+  // noinspection TypeScriptValidateTypes
   return (
     <Stack direction="row" spacing={4}>
       {NAV_ITEMS.map((navItem) => (
@@ -121,7 +124,12 @@ function DesktopNav() {
               >
                 <Stack>
                   {navItem.children.map((child) => (
-                    <DesktopSubNav key={child.label} {...child} />
+                    <DesktopSubNav
+                      key={child.label}
+                      label={child.label}
+                      href={child.href}
+                      subLabel={child.subLabel}
+                    />
                   ))}
                 </Stack>
               </PopoverContent>
