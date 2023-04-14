@@ -191,11 +191,38 @@ const useSafe = () => {
     }
   };
 
+  // Reject safe proposed tx
+  const rejectTransaction = async (destinationAddress: string, withdrawAmount: string) => {
+    const destination = destinationAddress;
+    const amount = ethers.utils.parseUnits(withdrawAmount, "ether").toString();
+    const safeService = fetchSafeService();
+    const safeSdk = await fetchSafeSDK();
+    const safeTxHash = await fetchPendingTransactionHash();
+    if (safeService && safeSdk && safeTxHash) {
+      const safeTransactionData: SafeTransactionDataPartial = {
+        to: destination,
+        data: "0x",
+        value: amount,
+      };
+      const safeTransaction = await safeSdk.createTransaction({
+        safeTransactionData,
+      });
+      const rejectTx = await safeSdk.createRejectionTransaction(
+        safeTransaction.data.nonce,
+      );
+
+      const executeTxResponse = await safeSdk.executeTransaction(rejectTx);
+      console.log("Transaction rejected:");
+      console.log(`https://goerli.etherscan.io/tx/${executeTxResponse}`);
+    }
+  };
+
   return {
     deploySafe,
     proposeTransaction,
     confirmTransaction,
     executeTransaction,
+    rejectTransaction,
   };
 };
 
