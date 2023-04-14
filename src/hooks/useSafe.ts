@@ -9,7 +9,7 @@ import Safe, {
 } from "@safe-global/protocol-kit";
 import { SafeTransactionDataPartial } from "@safe-global/safe-core-sdk-types";
 import { useAddress, useSigner } from "@thirdweb-dev/react";
-import ethers, { BigNumber } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import { useState } from "react";
 
 const useSafe = () => {
