@@ -18,7 +18,7 @@ export default async function handler(
       const options = {
         name: body.title,
         description: formatFormData(body).toString(),
-        primary_sale_recipient: process.env.NEXT_PUBLIC_PRIMARIY_SALES_ADDRESS!,
+        primary_sale_recipient: process.env.NEXT_PUBLIC_PRIMARIY_SALES_ADDRESS!
       };
       const contractAddress = await sdk.deployer.deployNFTCollection(options);
 
@@ -31,10 +31,20 @@ export default async function handler(
           jobDetails: body.jobDetails,
           specialNotes: body.specialNotes,
           ownerAddress: body.walletAddress,
-          contractAddress,
-        },
+          contractAddress
+        }
       });
-      return res.status(200).json(contractAddress);
+
+      const contract = await sdk.getContract(contractAddress);
+      const txResult = await contract.roles.grant(
+        "minter",
+        body.walletAddress
+      );
+
+      return res.status(200).json({
+        contractAddress,
+        txResult
+      });
     } catch (error) {
       console.log(error);
       return res.status(500).json(error);

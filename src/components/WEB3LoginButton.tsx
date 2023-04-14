@@ -12,7 +12,7 @@ export default function Web3LoginButton() {
       if (accountData?.address) {
         await signIn("credentials", {
           address: accountData.address,
-          callbackUrl,
+          callbackUrl
         });
         return;
       }
@@ -36,7 +36,7 @@ export default function Web3LoginButton() {
       bg="pink.400"
       href="#"
       _hover={{
-        bg: "pink.300",
+        bg: "pink.300"
       }}
     >
       {accountData?.address ? "Sign In with Wallet" : "Connect Wallet"}

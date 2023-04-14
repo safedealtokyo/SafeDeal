@@ -11,7 +11,7 @@ export const useToaster = () => {
         status: "error",
         position: "top",
         duration: 7000,
-        isClosable: true,
+        isClosable: true
       });
     },
     [toast]
@@ -24,7 +24,7 @@ export const useToaster = () => {
         status: "success",
         position: "top",
         duration: 7000,
-        isClosable: true,
+        isClosable: true
       });
     },
     [toast]
@@ -36,7 +36,7 @@ export const useToaster = () => {
         title: message,
         status: "info",
         position: "top",
-        isClosable: true,
+        isClosable: true
       });
     },
     [toast]

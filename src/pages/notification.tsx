@@ -7,13 +7,13 @@ import {
   Input,
   Text,
   Textarea,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
 import {
   ChainId,
   ConnectWallet,
   useAddress,
-  useSigner,
+  useSigner
 } from "@thirdweb-dev/react";
 import axios from "axios";
 import { Inter } from "next/font/google";
@@ -45,7 +45,7 @@ export default function Home() {
     handleOptOut,
     fetchNotification,
     pushBroadcast,
-    pushTarget,
+    pushTarget
   } = usePush();
 
   const { infoToast } = useToaster();
