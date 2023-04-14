@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
 import { NextPageContext } from "next";
 import { getSession } from "next-auth/react";
 
@@ -9,20 +9,21 @@ type Props = {
   session: UserSession;
 };
 
-export default function Home({ session }: Props) {
+export default function Protected({ session }: Props) {
   return (
     <Box>
       <Navbar session={session} />
+      <Heading>Protected</Heading>
     </Box>
   );
 }
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
-  if (session) {
+  if (!session) {
     return {
       redirect: {
-        destination: "/protected",
+        destination: "/",
         permanent: false,
       },
     };
