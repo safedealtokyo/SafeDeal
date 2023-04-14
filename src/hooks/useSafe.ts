@@ -2,10 +2,14 @@
 /* eslint-disable no-alert */
 /* eslint-disable consistent-return */
 import SafeApiKit from "@safe-global/api-kit";
-import Safe, { EthersAdapter, SafeAccountConfig, SafeFactory } from "@safe-global/protocol-kit";
+import Safe, {
+  EthersAdapter,
+  SafeAccountConfig,
+  SafeFactory,
+} from "@safe-global/protocol-kit";
 import { SafeTransactionDataPartial } from "@safe-global/safe-core-sdk-types";
 import { useAddress, useSigner } from "@thirdweb-dev/react";
-import ethers from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 const useSafe = () => {
   const address = useAddress();
@@ -40,6 +44,7 @@ const useSafe = () => {
         signerOrProvider: signer,
       });
       const safeAddress = await fetchSafe();
+      console.log("safeAddress", safeAddress);
       const safeSdk = await Safe.create({
         ethAdapter: ethAdapterOwner1,
         safeAddress: safeAddress!,
@@ -49,7 +54,10 @@ const useSafe = () => {
   };
 
   // Create safe multisig contract for deposit.
-  const deploySafe = async (workerAddress: string, depositEthAmount: string) => {
+  const deploySafe = async (
+    workerAddress: string,
+    depositEthAmount: string,
+  ) => {
     if (signer) {
       const ethAdapterOwner1 = new EthersAdapter({
         ethers,
@@ -82,14 +90,16 @@ const useSafe = () => {
     }
   };
 
-  const proposeTransaction = async (destinationAddress: string, withdrawAmount: string) => {
-    // Any address can be used. In this example you will use vitalik.eth
-    const destination = destinationAddress;
-    const amount = ethers.utils.parseUnits(withdrawAmount, "ether").toString();
-    const safeService = fetchSafeService();
+  const proposeTransaction = async () => {
+    // TODO 取得するコントラクトアカウントの指定
     const safeSdk = await fetchSafeSDK();
+    // Any address can be used. In this example you will use vitalik.eth
+    const destination = address;
+    console.log("destination:", destination);
+    const amount = ethers.utils.parseUnits(String(ethers.utils.formatEther(await safeSdk?.getBalance() as BigNumber)), "ether").toString();
+    const safeService = fetchSafeService();
     const safeTransactionData: SafeTransactionDataPartial = {
-      to: destination,
+      to: destination!,
       data: "0x",
       value: amount,
     };
@@ -148,10 +158,10 @@ const useSafe = () => {
       });
 
       const signature = await safeSdkOwner.signTransactionHash(safeTxHash);
-      await safeService.confirmTransaction(
-        safeTxHash,
-        signature.data,
-      );
+      await safeService.confirmTransaction(safeTxHash, signature.data);
+      await executeTransaction();
+    } else {
+      alert("error");
     }
   };
 
@@ -173,9 +183,14 @@ const useSafe = () => {
   };
 
   // Deposit ether to safe address.
-  const sendEthToSafe = async (safeAddress: string, depositEthAmount: string) => {
+  const sendEthToSafe = async (
+    safeAddress: string,
+    depositEthAmount: string,
+  ) => {
     if (signer) {
-      const safeAmount = ethers.utils.parseUnits(depositEthAmount, "ether").toHexString();
+      const safeAmount = ethers.utils
+        .parseUnits(depositEthAmount, "ether")
+        .toHexString();
 
       const transactionParameters = {
         to: safeAddress,
@@ -192,7 +207,10 @@ const useSafe = () => {
   };
 
   // Reject safe proposed tx
-  const rejectTransaction = async (destinationAddress: string, withdrawAmount: string) => {
+  const rejectTransaction = async (
+    destinationAddress: string,
+    withdrawAmount: string,
+  ) => {
     const destination = destinationAddress;
     const amount = ethers.utils.parseUnits(withdrawAmount, "ether").toString();
     const safeService = fetchSafeService();
@@ -218,10 +236,12 @@ const useSafe = () => {
   };
 
   return {
+    fetchSafe,
+    fetchSafeSDK,
     deploySafe,
     proposeTransaction,
     confirmTransaction,
-    executeTransaction,
+    // executeTransaction,
     rejectTransaction,
   };
 };
