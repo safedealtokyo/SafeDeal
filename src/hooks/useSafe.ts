@@ -49,7 +49,7 @@ const useSafe = () => {
   };
 
   // Create safe multisig contract for deposit.
-  const deploySafe = async (workerAddress: string) => {
+  const deploySafe = async (workerAddress: string, depositEthAmount: string) => {
     if (signer) {
       const ethAdapterOwner1 = new EthersAdapter({
         ethers,
@@ -76,7 +76,7 @@ const useSafe = () => {
       console.log("Your Safe has been deployed:");
       console.log(`https://goerli.etherscan.io/address/${safeAddress}`);
       console.log(`https://app.safe.global/gor:${safeAddress}`);
-      // sendEthToSafe(safeAddress)
+      sendEthToSafe(safeAddress, depositEthAmount);
     } else {
       alert("Wallet not connected");
     }
@@ -155,10 +155,47 @@ const useSafe = () => {
     }
   };
 
+  // Execute transaction for already confirmed 2 owners
+  const executeTransaction = async () => {
+    const safeService = fetchSafeService();
+    const safeSdk = await fetchSafeSDK();
+    const safeTxHash = await fetchPendingTransactionHash();
+    if (safeService && safeSdk && safeTxHash) {
+      const safeTransaction = await safeService.getTransaction(safeTxHash);
+      const executeTxResponse = await safeSdk.executeTransaction(
+        safeTransaction,
+      );
+      const receipt = await executeTxResponse.transactionResponse?.wait();
+
+      console.log("Transaction executed:");
+      console.log(`https://goerli.etherscan.io/tx/${receipt.transactionHash}`);
+    }
+  };
+
+  // Deposit ether to safe address.
+  const sendEthToSafe = async (safeAddress: string, depositEthAmount: string) => {
+    if (signer) {
+      const safeAmount = ethers.utils.parseUnits(depositEthAmount, "ether").toHexString();
+
+      const transactionParameters = {
+        to: safeAddress,
+        value: safeAmount,
+      };
+
+      const tx = await signer.sendTransaction(transactionParameters);
+
+      console.log("Fundraising.");
+      console.log(
+        `Deposit Transaction: https://goerli.etherscan.io/tx/${tx.hash}`,
+      );
+    }
+  };
+
   return {
     deploySafe,
     proposeTransaction,
     confirmTransaction,
+    executeTransaction,
   };
 };
 
