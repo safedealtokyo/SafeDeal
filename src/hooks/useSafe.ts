@@ -115,9 +115,50 @@ const useSafe = () => {
       });
     }
   };
+
+  // fetch pending transaction hash
+  const fetchPendingTransactionHash = async () => {
+    const safeService = fetchSafeService();
+    const safeAddress = await fetchSafe();
+    if (safeService && signer && safeAddress) {
+      const pendingTransactions = await safeService.getPendingTransactions(
+        safeAddress,
+      );
+      // Assumes that the first pending transaction is the transaction you want to confirm
+      const transaction = pendingTransactions.results[0];
+      const { safeTxHash } = transaction;
+      return safeTxHash;
+    }
+  };
+
+  // Confirm proposed transaction
+  const confirmTransaction = async () => {
+    const safeService = fetchSafeService();
+    const safeAddress = await fetchSafe();
+    const safeTxHash = await fetchPendingTransactionHash();
+    if (safeService && signer && safeTxHash && safeAddress) {
+      const ethAdapterOwner = new EthersAdapter({
+        ethers,
+        signerOrProvider: signer,
+      });
+
+      const safeSdkOwner = await Safe.create({
+        ethAdapter: ethAdapterOwner,
+        safeAddress,
+      });
+
+      const signature = await safeSdkOwner.signTransactionHash(safeTxHash);
+      await safeService.confirmTransaction(
+        safeTxHash,
+        signature.data,
+      );
+    }
+  };
+
   return {
     deploySafe,
     proposeTransaction,
+    confirmTransaction,
   };
 };
 
