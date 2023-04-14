@@ -62,7 +62,7 @@ const useSafe = () => {
   // Create safe multisig contract for deposit.
   const deploySafe = async (
     workerAddress: string,
-    depositEthAmount: string
+    depositEthAmount: string,
   ) => {
     try {
       setIsLoading(true);
@@ -115,9 +115,9 @@ const useSafe = () => {
       const amount = ethers.utils
         .parseUnits(
           String(
-            ethers.utils.formatEther((await safeSdk?.getBalance()) as BigNumber)
+            ethers.utils.formatEther((await safeSdk?.getBalance()) as BigNumber),
           ),
-          "ether"
+          "ether",
         )
         .toString();
       const safeService = fetchSafeService();
@@ -158,7 +158,7 @@ const useSafe = () => {
     const safeAddress = await fetchSafe();
     if (safeService && signer && safeAddress) {
       const pendingTransactions = await safeService.getPendingTransactions(
-        safeAddress
+        safeAddress,
       );
       // Assumes that the first pending transaction is the transaction you want to confirm
       const transaction = pendingTransactions.results[0];
@@ -202,14 +202,14 @@ const useSafe = () => {
     if (safeService && safeSdk && safeTxHash) {
       const safeTransaction = await safeService.getTransaction(safeTxHash);
       const executeTxResponse = await safeSdk.executeTransaction(
-        safeTransaction
+        safeTransaction,
       );
       const receipt = await executeTxResponse.transactionResponse?.wait();
 
       console.log("Transaction executed:");
       if (receipt) {
         console.log(
-          `https://goerli.etherscan.io/tx/${receipt.transactionHash}`
+          `https://goerli.etherscan.io/tx/${receipt.transactionHash}`,
         );
       } else {
         console.log("failed");
@@ -220,7 +220,7 @@ const useSafe = () => {
   // Deposit ether to safe address.
   const sendEthToSafe = async (
     safeAddress: string,
-    depositEthAmount: string
+    depositEthAmount: string,
   ) => {
     if (signer) {
       const safeAmount = ethers.utils
@@ -236,7 +236,7 @@ const useSafe = () => {
 
       console.log("Fundraising.");
       console.log(
-        `Deposit Transaction: https://goerli.etherscan.io/tx/${tx.hash}`
+        `Deposit Transaction: https://goerli.etherscan.io/tx/${tx.hash}`,
       );
     }
   };
@@ -244,7 +244,7 @@ const useSafe = () => {
   // Reject safe proposed tx
   const rejectTransaction = async (
     destinationAddress: string,
-    withdrawAmount: string
+    withdrawAmount: string,
   ) => {
     const destination = destinationAddress;
     const amount = ethers.utils.parseUnits(withdrawAmount, "ether").toString();
@@ -261,7 +261,7 @@ const useSafe = () => {
         safeTransactionData,
       });
       const rejectTx = await safeSdk.createRejectionTransaction(
-        safeTransaction.data.nonce
+        safeTransaction.data.nonce,
       );
 
       const executeTxResponse = await safeSdk.executeTransaction(rejectTx);
