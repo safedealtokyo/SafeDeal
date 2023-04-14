@@ -5,7 +5,6 @@ import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { RecoilRoot } from "recoil";
-import { WagmiProvider } from "wagmi";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [activeChain, setActiveChain] = useState<
@@ -30,15 +29,13 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <RecoilRoot override>
-      <WagmiProvider autoConnect>
-        <SessionProvider session={pageProps.session}>
-          <ChakraProvider>
-            <ThirdwebProvider activeChain={activeChain}>
-              <Component {...pageProps} />
-            </ThirdwebProvider>
-          </ChakraProvider>
-        </SessionProvider>
-      </WagmiProvider>
+      <SessionProvider session={pageProps.session}>
+        <ChakraProvider>
+          <ThirdwebProvider activeChain={activeChain}>
+            <Component {...pageProps} />
+          </ThirdwebProvider>
+        </ChakraProvider>
+      </SessionProvider>
     </RecoilRoot>
   );
 }
