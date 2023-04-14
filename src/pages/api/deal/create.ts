@@ -2,6 +2,7 @@ import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { formatFormData } from "@/utils/formatJson";
+import { prisma } from "@/utils/prisma";
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,6 +22,18 @@ export default async function handler(
       };
       const contractAddress = await sdk.deployer.deployNFTCollection(options);
 
+      await prisma.deal.create({
+        data: {
+          title: body.title,
+          fixedFee: body.fixedFee,
+          applicationDeadline: new Date(body.applicationDeadline),
+          deliveryDate: new Date(body.deliveryDate),
+          jobDetails: body.jobDetails,
+          specialNotes: body.specialNotes,
+          ownerAddress: body.walletAddress,
+          contractAddress,
+        },
+      });
       return res.status(200).json(contractAddress);
     } catch (error) {
       console.log(error);
