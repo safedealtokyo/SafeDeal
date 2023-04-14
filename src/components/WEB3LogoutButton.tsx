@@ -7,7 +7,7 @@ import {
   MenuItem,
   MenuDivider,
   Text,
-  HStack,
+  HStack
 } from "@chakra-ui/react";
 
 import useProtected from "@/hooks/useProtected";
@@ -44,7 +44,7 @@ export default function WEB3LogoutButton({ session }: Props) {
         <MenuItem
           onClick={handleLogout}
           _hover={{
-            bg: "pink.300",
+            bg: "pink.300"
           }}
         >
           Logout

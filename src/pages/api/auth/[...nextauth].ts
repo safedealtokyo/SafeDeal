@@ -10,8 +10,8 @@ export default NextAuth({
         address: {
           label: "Address",
           type: "text",
-          placeholder: "0x0",
-        },
+          placeholder: "0x0"
+        }
       },
       async authorize(credentials: any) {
         const address = credentials?.address;
@@ -19,28 +19,28 @@ export default NextAuth({
           return null;
         }
         return {
-          id: address,
+          id: address
         };
-      },
-    }),
+      }
+    })
   ],
   session: {
-    strategy: "jwt",
+    strategy: "jwt"
   },
   jwt: {
-    secret: process.env.JWT_SECRET,
+    secret: process.env.JWT_SECRET
   },
   callbacks: {
     async session({ session, token }) {
       (session as any).address = token.sub;
       return session;
-    },
+    }
   },
   secret: process.env.NEXT_AUTH_SECRET,
   pages: {
     signIn: "/",
     signOut: "/",
     error: "/",
-    newUser: "/",
-  },
+    newUser: "/"
+  }
 });

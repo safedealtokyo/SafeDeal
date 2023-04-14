@@ -4,7 +4,7 @@ import {
   HamburgerIcon,
   CloseIcon,
   ChevronDownIcon,
-  ChevronRightIcon,
+  ChevronRightIcon
 } from "@chakra-ui/icons";
 import {
   Box,
@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
   PopoverContent,
   useColorModeValue,
-  useDisclosure,
+  useDisclosure
 } from "@chakra-ui/react";
 
 import Logo from "@/components/Logo";
@@ -106,7 +106,7 @@ function DesktopNav() {
                 color={linkColor}
                 _hover={{
                   textDecoration: "none",
-                  color: linkHoverColor,
+                  color: linkHoverColor
                 }}
               >
                 {navItem.label}
@@ -204,7 +204,7 @@ function MobileNavItem({ label, children, href }: NavItem) {
         justify="space-between"
         align="center"
         _hover={{
-          textDecoration: "none",
+          textDecoration: "none"
         }}
       >
         <Text

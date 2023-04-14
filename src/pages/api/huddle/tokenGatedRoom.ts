@@ -10,13 +10,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         title: "Huddle01-Test",
         tokenType: "ERC721",
         chain: "ETHEREUM",
-        contractAddress: ["0x071b6636aa35a7e7a89f8fb411c07a47365a548f"],
+        contractAddress: ["0x071b6636aa35a7e7a89f8fb411c07a47365a548f"]
       },
       {
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": process.env.HUDDLE_API_KEY,
-        },
+          "x-api-key": process.env.HUDDLE_API_KEY
+        }
       }
     );
 

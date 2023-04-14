@@ -23,13 +23,13 @@ export async function getServerSideProps(context: NextPageContext) {
     return {
       redirect: {
         destination: "/protected",
-        permanent: false,
-      },
+        permanent: false
+      }
     };
   }
   return {
     props: {
-      session,
-    },
+      session
+    }
   };
 }

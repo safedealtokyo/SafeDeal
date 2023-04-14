@@ -29,13 +29,13 @@ export async function getServerSideProps(context: NextPageContext) {
     return {
       redirect: {
         destination: "/",
-        permanent: false,
-      },
+        permanent: false
+      }
     };
   }
   return {
     props: {
-      session,
-    },
+      session
+    }
   };
 }

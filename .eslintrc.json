@@ -73,10 +73,10 @@
         "consistent": true
       }
     ],
-    "comma-dangle": [
-      "warn",
-      "always-multiline"
-    ],
-    "operator-linebreak": "off"
+    "comma-dangle": ["warn", "never"],
+    "operator-linebreak": "off",
+    "no-console": "off",
+    "no-alert": "off",
+    "react-hooks/exhaustive-deps": "off"
   }
 }

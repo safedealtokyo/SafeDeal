@@ -3,7 +3,7 @@ import { NavItem } from "@/types/NavItem";
 const NAV_ITEMS: NavItem[] = [
   {
     label: "Deals",
-    href: "/deal",
+    href: "/deal"
   },
   {
     label: "MyPage",
@@ -12,9 +12,9 @@ const NAV_ITEMS: NavItem[] = [
       {
         label: "Profile",
         href: "#",
-        subLabel: "Software development",
-      },
-    ],
-  },
+        subLabel: "Software development"
+      }
+    ]
+  }
 ];
 export default NAV_ITEMS;
