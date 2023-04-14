@@ -74,6 +74,7 @@ const Chat: React.FC<Props> = ({ deal }) => {
 
   useEffect(() => {
     if (deal.ownerAddress && address) {
+      // setInterval(fetchNewConversion, 5000);
       const fetch = async () => {
         let conversionHistory;
         if (address.toLowerCase() === deal.ownerAddress.toLowerCase()) {
