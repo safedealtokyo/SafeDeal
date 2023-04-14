@@ -6,8 +6,8 @@ import { formatFormData } from "@/utils/formatJson";
 import { prisma } from "@/utils/prisma";
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+  req: NextApiRequest,
+  res: NextApiResponse
 ) {
   const { body } = req;
   if (req.method === "POST") {
@@ -38,8 +38,8 @@ export default async function handler(
 
       const contract = await sdk.getContract(contractAddress);
       const txResult = await contract.roles.grant(
-          "minter",
-          body.walletAddress
+        "minter",
+        body.walletAddress
       );
 
       const tx = await contract.call("multicall", [multicallData]);
