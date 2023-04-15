@@ -26,7 +26,7 @@ import { useAddress } from "@thirdweb-dev/react";
 import Logo from "@/components/Logo";
 import Web3LoginButton from "@/components/WEB3LoginButton";
 import WEB3LogoutButton from "@/components/WEB3LogoutButton";
-import NAV_ITEMS from "@/datas";
+import { NAV_ITEMS } from "@/datas";
 import { NavItem } from "@/types/NavItem";
 
 export default function Navbar() {
