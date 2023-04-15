@@ -25,19 +25,16 @@ export default function Web3LoginButton() {
   return (
     <Button
       onClick={handleLogin}
-      colorScheme="teal"
       as="a"
       display={{ md: "inline-flex" }}
       fontSize="sm"
       fontWeight={600}
       color="white"
-      bg="pink.400"
+      bg="black"
       href="#"
-      _hover={{
-        bg: "pink.300"
-      }}
+      py={3}
     >
-      {address ? "Sign In with Wallet" : "Connect Wallet"}
+      Connect
     </Button>
   );
 }
