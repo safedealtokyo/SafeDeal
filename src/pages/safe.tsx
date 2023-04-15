@@ -40,7 +40,7 @@ function SafePage() {
           colorScheme="blue"
           onClick={() => {
             if (workerAddress && depositAmountEth) {
-              deploySafe(workerAddress, depositAmountEth);
+              deploySafe("", workerAddress, depositAmountEth);
             }
           }}
         >

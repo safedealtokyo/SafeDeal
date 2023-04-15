@@ -2,7 +2,7 @@
 /* eslint-disable no-confusing-arrow */
 /* eslint-disable react/function-component-definition */
 
-import { Button, Flex, HStack } from "@chakra-ui/react";
+import { Box, Button, Flex, HStack } from "@chakra-ui/react";
 import { Deal, Worker } from "@prisma/client";
 import { useAddress } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
@@ -28,7 +28,7 @@ const Chat: React.FC<Props> = ({ deal }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
 
-  const { deploySafe } = useSafe();
+  const { deploySafe, isLoading } = useSafe();
   const fetchTargetAddress = () =>
     address?.toLowerCase() === deal.ownerAddress.toLowerCase()
       ? (router.query.workerAddress as string)
@@ -131,25 +131,38 @@ const Chat: React.FC<Props> = ({ deal }) => {
           setInputMessage={setInputMessage}
           handleSendMessage={handleSendMessage}
         />
-        <HStack>
-          <Button
-            colorScheme="blue"
-            width="full"
-            onClick={async () => {
-              console.log(
-                "router.query.workerAddress",
-                router.query.workerAddress,
-                deal.fixedFee
-              );
-              await deploySafe(
-                router.query.workerAddress as string,
-                deal.fixedFee
-              );
-            }}
-          >
-            Apply Deal
+        {deal.multiSigAddress ? (
+          // Proceccing
+          <Button width="full" colorScheme="cyan">
+            Deal Processing
           </Button>
-        </HStack>
+        ) : (
+          // Before Apply Deal
+          <HStack>
+            {deal.ownerAddress === address && (
+              <Button
+                isLoading={isLoading}
+                disabled={isLoading}
+                colorScheme="blue"
+                width="full"
+                onClick={async () => {
+                  console.log(
+                    "router.query.workerAddress",
+                    router.query.workerAddress,
+                    deal.fixedFee
+                  );
+                  await deploySafe(
+                    router.query.dealId as string,
+                    router.query.workerAddress as string,
+                    deal.fixedFee
+                  );
+                }}
+              >
+                Apply Deal
+              </Button>
+            )}
+          </HStack>
+        )}
       </Flex>
     </Flex>
   );

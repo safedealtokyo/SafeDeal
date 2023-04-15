@@ -55,10 +55,12 @@ export default function Protected({ deal }: Props) {
 
   const chatWithClient = async () => {
     // Notify to Client
+    console.log("CHAAAAAAAT");
     if (tempDeal) {
       console.log("notify", tempDeal.ownerAddress);
       await pushTarget("Chat Start", "Chat Start", tempDeal.ownerAddress);
       // Create record
+      console.log("今からこれで紐っづける", tempDeal.id, address);
       await axios.post("/api/deal/workers/create", {
         dealId: tempDeal.id,
         walletAddress: address,

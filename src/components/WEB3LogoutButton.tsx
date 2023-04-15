@@ -7,19 +7,19 @@ import {
   MenuItem,
   MenuDivider,
   Text,
-  HStack
+  HStack,
 } from "@chakra-ui/react";
 import { useDisconnect } from "@thirdweb-dev/react";
 
 type Props = {
-  address:string
-}
+  address: string;
+};
 
 export default function WEB3LogoutButton({ address }: Props) {
   const disconnect = useDisconnect();
   const image = "";
   console.log(address);
-  const truncatedAddress = `${address?.slice(0, 3)}...${address?.slice(-3)}`;
+  const truncatedAddress = `${address?.slice(0, 5)}...${address?.slice(-3)}`;
   const handleLogout = async () => {
     try {
       await disconnect();
@@ -50,7 +50,7 @@ export default function WEB3LogoutButton({ address }: Props) {
         <MenuItem
           onClick={handleLogout}
           _hover={{
-            bg: "pink.300"
+            bg: "pink.300",
           }}
         >
           Logout

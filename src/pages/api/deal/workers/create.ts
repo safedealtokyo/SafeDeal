@@ -18,10 +18,10 @@ export default async function handler(
       try {
         const user = await prisma.user.create({
           data: {
-            name: "",
-            email: "",
-            walletAddress: req.body.walletAddress
-          }
+            name: "Sample Taro",
+            email: "taro@example.com",
+            walletAddress: req.body.walletAddress,
+          },
         });
 
         const worker = await prisma.worker.create({
@@ -30,11 +30,11 @@ export default async function handler(
             walletAddress: req.body.walletAddress,
             deal: {
               connect: {
-                id: req.body.dealId
-              }
+                id: req.body.dealId,
+              },
             },
-            userId: user.id
-          }
+            userId: user.id,
+          },
         });
 
         return res.status(200).json(worker);

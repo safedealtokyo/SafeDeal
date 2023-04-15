@@ -27,6 +27,7 @@ function Messages({ messages }: Props) {
           return (
             <Flex key={index} w="100%" justify="flex-end">
               <Flex
+                borderRadius="15px"
                 bg="black"
                 color="white"
                 minW="100px"

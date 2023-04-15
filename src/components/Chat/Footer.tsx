@@ -38,7 +38,7 @@ function Footer({
         value={inputMessage}
         onChange={(e) => setInputMessage(e.target.value)}
       />
-      <RepeatIcon mr="10px" boxSize="6" onClick={fetchNewConversion} />
+      <RepeatIcon mx="8px" boxSize="6" onClick={fetchNewConversion} />
       <Button
         bg="black"
         color="white"

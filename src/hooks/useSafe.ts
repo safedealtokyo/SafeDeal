@@ -5,10 +5,11 @@ import SafeApiKit from "@safe-global/api-kit";
 import Safe, {
   EthersAdapter,
   SafeAccountConfig,
-  SafeFactory
+  SafeFactory,
 } from "@safe-global/protocol-kit";
 import { SafeTransactionDataPartial } from "@safe-global/safe-core-sdk-types";
 import { useAddress, useSigner } from "@thirdweb-dev/react";
+import axios from "axios";
 import { ethers, BigNumber } from "ethers";
 import { useState } from "react";
 
@@ -24,12 +25,12 @@ const useSafe = () => {
       if (signer) {
         const ethAdapterOwner1 = new EthersAdapter({
           ethers,
-          signerOrProvider: signer
+          signerOrProvider: signer,
         });
         const txServiceUrl = "https://safe-transaction-goerli.safe.global";
         const safeService = new SafeApiKit({
           txServiceUrl,
-          ethAdapter: ethAdapterOwner1
+          ethAdapter: ethAdapterOwner1,
         });
         return safeService;
       }
@@ -48,12 +49,12 @@ const useSafe = () => {
     if (signer) {
       const ethAdapterOwner1 = new EthersAdapter({
         ethers,
-        signerOrProvider: signer
+        signerOrProvider: signer,
       });
       const safeAddress = await fetchSafe();
       const safeSdk = await Safe.create({
         ethAdapter: ethAdapterOwner1,
-        safeAddress: safeAddress!
+        safeAddress: safeAddress!,
       });
       return safeSdk;
     }
@@ -61,6 +62,7 @@ const useSafe = () => {
 
   // Create safe multisig contract for deposit.
   const deploySafe = async (
+    dealId: string,
     workerAddress: string,
     depositEthAmount: string
   ) => {
@@ -69,12 +71,12 @@ const useSafe = () => {
       if (signer) {
         const ethAdapterOwner1 = new EthersAdapter({
           ethers,
-          signerOrProvider: signer
+          signerOrProvider: signer,
         });
 
         //   Initialize the Protcol Kit
         const safeFactory = await SafeFactory.create({
-          ethAdapter: ethAdapterOwner1
+          ethAdapter: ethAdapterOwner1,
         });
 
         // Set Owners
@@ -82,18 +84,23 @@ const useSafe = () => {
           owners: [
             address as string,
             workerAddress,
-            process.env.NEXT_PUBLIC_OWNER_ADDRESS! // Owner Address
+            process.env.NEXT_PUBLIC_OWNER_ADDRESS!, // Owner Address
           ],
-          threshold: 2
+          threshold: 2,
         };
         const safeSdkOwner1 = await safeFactory.deploySafe({
-          safeAccountConfig
+          safeAccountConfig,
         });
 
         const safeAddress = safeSdkOwner1.getAddress();
         console.log("Your Safe has been deployed:");
         console.log(`https://goerli.etherscan.io/address/${safeAddress}`);
         console.log(`https://app.safe.global/gor:${safeAddress}`);
+        const result = await axios.put("/api/deal/update", {
+          safeAddress,
+          dealId,
+        });
+        console.log(result.status, result.statusText, result.data);
         sendEthToSafe(safeAddress, depositEthAmount);
       } else {
         alert("Wallet not connected");
@@ -124,13 +131,13 @@ const useSafe = () => {
       const safeTransactionData: SafeTransactionDataPartial = {
         to: destination!,
         data: "0x",
-        value: amount
+        value: amount,
       };
 
       if (signer && address && safeService && safeSdk) {
         // Create a Safe transaction with the provided parameters
         const safeTransaction = await safeSdk.createTransaction({
-          safeTransactionData
+          safeTransactionData,
         });
 
         // Deterministic hash based on transaction parameters
@@ -144,7 +151,7 @@ const useSafe = () => {
           safeTransactionData: safeTransaction.data,
           safeTxHash,
           senderAddress: address,
-          senderSignature: senderSignature.data
+          senderSignature: senderSignature.data,
         });
       }
     } finally {
@@ -177,12 +184,12 @@ const useSafe = () => {
       if (safeService && signer && safeTxHash && safeAddress) {
         const ethAdapterOwner = new EthersAdapter({
           ethers,
-          signerOrProvider: signer
+          signerOrProvider: signer,
         });
 
         const safeSdkOwner = await Safe.create({
           ethAdapter: ethAdapterOwner,
-          safeAddress
+          safeAddress,
         });
 
         const signature = await safeSdkOwner.signTransactionHash(safeTxHash);
@@ -222,22 +229,27 @@ const useSafe = () => {
     safeAddress: string,
     depositEthAmount: string
   ) => {
-    if (signer) {
-      const safeAmount = ethers.utils
-        .parseUnits(depositEthAmount, "ether")
-        .toHexString();
+    try {
+      setIsLoading(true);
+      if (signer) {
+        const safeAmount = ethers.utils
+          .parseUnits(depositEthAmount, "ether")
+          .toHexString();
 
-      const transactionParameters = {
-        to: safeAddress,
-        value: safeAmount
-      };
+        const transactionParameters = {
+          to: safeAddress,
+          value: safeAmount,
+        };
 
-      const tx = await signer.sendTransaction(transactionParameters);
+        const tx = await signer.sendTransaction(transactionParameters);
 
-      console.log("Fundraising.");
-      console.log(
-        `Deposit Transaction: https://goerli.etherscan.io/tx/${tx.hash}`
-      );
+        console.log("Fundraising.");
+        console.log(
+          `Deposit Transaction: https://goerli.etherscan.io/tx/${tx.hash}`
+        );
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -255,10 +267,10 @@ const useSafe = () => {
       const safeTransactionData: SafeTransactionDataPartial = {
         to: destination,
         data: "0x",
-        value: amount
+        value: amount,
       };
       const safeTransaction = await safeSdk.createTransaction({
-        safeTransactionData
+        safeTransactionData,
       });
       const rejectTx = await safeSdk.createRejectionTransaction(
         safeTransaction.data.nonce
@@ -276,7 +288,7 @@ const useSafe = () => {
     proposeTransaction,
     confirmTransaction,
     executeTransaction,
-    rejectTransaction
+    rejectTransaction,
   };
 };
 
