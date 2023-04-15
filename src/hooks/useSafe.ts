@@ -153,6 +153,7 @@ const useSafe = () => {
           senderAddress: address,
           senderSignature: senderSignature.data,
         });
+        console.log("propose", safeAddress);
       }
     } finally {
       setIsLoading(false);
@@ -161,17 +162,21 @@ const useSafe = () => {
 
   // fetch pending transaction hash
   const fetchPendingTransactionHash = async () => {
+    console.log("fetchPendingTransactionHash");
     const safeService = fetchSafeService();
     const safeAddress = await fetchSafe();
     if (safeService && signer && safeAddress) {
+      console.log("fetchPendingTransactionHash2");
       const pendingTransactions = await safeService.getPendingTransactions(
         safeAddress
       );
       // Assumes that the first pending transaction is the transaction you want to confirm
       const transaction = pendingTransactions.results[0];
       const { safeTxHash } = transaction;
+      console.log("fetchPendingTransactionHash3", safeTxHash);
       return safeTxHash;
     }
+    console.log("fetchPendingTransactionHash4");
   };
 
   // Confirm proposed transaction
@@ -289,6 +294,7 @@ const useSafe = () => {
     confirmTransaction,
     executeTransaction,
     rejectTransaction,
+    fetchPendingTransactionHash,
   };
 };
 
