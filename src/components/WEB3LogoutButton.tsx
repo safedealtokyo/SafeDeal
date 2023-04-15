@@ -1,15 +1,15 @@
 import {
   Button,
-  Avatar,
   MenuButton,
   Menu,
   MenuList,
   MenuItem,
-  MenuDivider,
   Text,
   HStack
 } from "@chakra-ui/react";
 import { useDisconnect } from "@thirdweb-dev/react";
+import React from "react";
+import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 
 type Props = {
   address: string;
@@ -17,7 +17,6 @@ type Props = {
 
 export default function WEB3LogoutButton({ address }: Props) {
   const disconnect = useDisconnect();
-  const image = "";
   console.log(address);
   const truncatedAddress = `${address?.slice(0, 5)}...${address?.slice(-3)}`;
   const handleLogout = async () => {
@@ -39,19 +38,13 @@ export default function WEB3LogoutButton({ address }: Props) {
         fontWeight={600}
       >
         <HStack>
-          <Avatar size="sm" src={image} />
+          <Jazzicon diameter={30} seed={jsNumberForAddress(address)} />
           <Text display={{ sm: "none", md: "inline" }}>{truncatedAddress}</Text>
         </HStack>
       </MenuButton>
       <MenuList>
-        <MenuItem>Link 1</MenuItem>
-        <MenuItem>Link 2</MenuItem>
-        <MenuDivider />
         <MenuItem
           onClick={handleLogout}
-          _hover={{
-            bg: "pink.300"
-          }}
         >
           Logout
         </MenuItem>

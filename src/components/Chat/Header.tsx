@@ -1,30 +1,21 @@
-/* eslint-disable function-paren-newline */
-/* eslint-disable implicit-arrow-linebreak */
-/* eslint-disable no-confusing-arrow */
-/* eslint-disable react/jsx-one-expression-per-line */
-/* eslint-disable react/jsx-no-useless-fragment */
 import {
   Flex,
-  Avatar,
   Text,
   Button,
   HStack,
-  useDisclosure
-} from "@chakra-ui/react";
-import {
+  useDisclosure,
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton
 } from "@chakra-ui/react";
 import { Deal, Worker } from "@prisma/client";
 import { useAddress } from "@thirdweb-dev/react";
-import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 
 import usePush from "@/hooks/usePush";
 import { addressFormat } from "@/utils/format";
@@ -38,17 +29,12 @@ type Props = {
   name: string;
 };
 function Header({ deal, name }: Props) {
-  // const [worker, setWorker] = useState<Worker>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const address = useAddress();
   const [startHuddle, setStartHuddle] = useState<boolean>();
   const { pushTarget } = usePush();
   const handleStartHuddle = async () => {
-    // const res = await axios.get(
-    //   `/api/deal/workers?dealId=${router.query.dealId}&walletAddress=${address}`
-    // );
-    // setWorker(res.data);
     setStartHuddle(true);
     onOpen();
     pushTarget("Start Huddle", "Let's Start Huddle", deal.ownerAddress);
@@ -59,21 +45,9 @@ function Header({ deal, name }: Props) {
   }
   return (
     <HStack w="100%" justifyContent="space-between">
-      {/* {startHuddle && deal.workers ? (
-        <Huddle
-          roomId={
-            deal.workers.filter((worker) => worker.walletAddress === address)[0]
-              .roomId
-          }
-        />
-      ) : ( */}
       <>
         <HStack>
-          <Avatar
-            size="lg"
-            name="Dan Abrahmov"
-            src="https://bit.ly/dan-abramov"
-          />
+          <Jazzicon diameter={30} seed={jsNumberForAddress(name)} />
           <Flex flexDirection="column" mx="5" justify="center">
             <Text fontSize="lg" fontWeight="bold">
               {addressFormat(name)}
@@ -82,7 +56,9 @@ function Header({ deal, name }: Props) {
               {deal.title}
             </Text>
             <Text fontSize="xs" fontWeight="semibold">
-              {deal.fixedFee} ETH
+              {deal.fixedFee}
+              {" "}
+              ETH
             </Text>
           </Flex>
         </HStack>
@@ -90,7 +66,6 @@ function Header({ deal, name }: Props) {
           Start Huddle
         </Button>
       </>
-      {/* )} */}
       <Modal isOpen={isOpen} onClose={onClose} size="full">
         <ModalOverlay />
         <ModalContent w="100%">
@@ -100,13 +75,12 @@ function Header({ deal, name }: Props) {
             {startHuddle && deal.workers && address && (
               <Huddle
                 roomId={
-                  deal.workers.filter((worker) =>
+                  deal.workers.filter((worker) => (
                     deal.ownerAddress.toLowerCase() === address.toLowerCase() // Client判定
                       ? worker.walletAddress.toLowerCase() ===
                         (router.query.workerAddress as string).toLowerCase()
                       : worker.walletAddress.toLowerCase() ===
-                        address.toLowerCase()
-                  )[0].roomId
+                        address.toLowerCase()))[0].roomId
                 }
               />
             )}

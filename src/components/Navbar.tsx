@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
   PopoverContent,
   useColorModeValue,
-  useDisclosure, Spacer
+  useDisclosure
 } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 

@@ -2,14 +2,13 @@
 /* eslint-disable no-confusing-arrow */
 /* eslint-disable react/function-component-definition */
 
-import { Box, Button, Flex, HStack, VStack } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { Deal, Worker } from "@prisma/client";
 import { useAddress } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 import useChat from "@/hooks/useChat";
-import useSafe from "@/hooks/useSafe";
 
 import DealStatus from "../DealStatus";
 
@@ -30,7 +29,6 @@ const Chat: React.FC<Props> = ({ deal }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
 
-  const { deploySafe, isLoading } = useSafe();
   const fetchTargetAddress = () =>
     address?.toLowerCase() === deal.ownerAddress.toLowerCase()
       ? (router.query.workerAddress as string)
@@ -49,8 +47,8 @@ const Chat: React.FC<Props> = ({ deal }) => {
       {
         from: address!,
         text: data,
-        timestamp: new Date().getTime(),
-      },
+        timestamp: new Date().getTime()
+      }
     ]);
     setInputMessage("");
   };
@@ -74,8 +72,8 @@ const Chat: React.FC<Props> = ({ deal }) => {
             {
               from: result[0].fromDID.replace("eip155:", ""),
               text: result[0].messageContent,
-              timestamp: result[0].timestamp,
-            },
+              timestamp: result[0].timestamp
+            }
           ]);
         }
       }
@@ -109,7 +107,7 @@ const Chat: React.FC<Props> = ({ deal }) => {
             .map((message) => ({
               text: message.messageContent,
               from: message.fromDID.replace("eip155:", ""),
-              timestamp: message.timestamp,
+              timestamp: message.timestamp
             }));
           setMessages(mes);
         }
@@ -130,7 +128,14 @@ const Chat: React.FC<Props> = ({ deal }) => {
           }
         />
         <Divider />
-        <Messages messages={messages} />
+        <Messages
+          name={
+          address?.toLowerCase() === deal.ownerAddress.toLowerCase()
+            ? (router.query.workerAddress as string)
+            : deal.ownerAddress
+        }
+          messages={messages}
+        />
         <Divider />
         <Footer
           fetchNewConversion={fetchNewConversion}
