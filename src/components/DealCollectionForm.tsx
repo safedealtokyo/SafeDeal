@@ -6,7 +6,7 @@ import {
   FormLabel,
   Input,
   Textarea,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAddress } from "@thirdweb-dev/react";
@@ -26,7 +26,7 @@ const schema = yup.object().shape({
   specialNotes: yup.string(),
   deliveryDate: yup.string().required("納品完了日は必須です"),
   applicationDeadline: yup.string().required("応募期限は必須です"),
-  walletAddress: yup.string().required("ウォレットは必須です"),
+  walletAddress: yup.string().required("ウォレットは必須です")
 });
 
 type FormData = yup.InferType<typeof schema>;
@@ -37,7 +37,7 @@ export default function DealCollectionForm() {
   // const { infoToast } = useToaster();
   const { pushTarget } = usePush();
   const { register, handleSubmit, reset, formState } = useForm<FormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema)
   });
   const onSubmit = async (data: FormData) => {
     console.log(data);
@@ -47,7 +47,7 @@ export default function DealCollectionForm() {
         // infoToast("Deal Created");
         pushTarget("Deal Created", "Deal Created", address);
         reset();
-        router.push("/deal");
+        router.push("/");
         return response.data;
       } catch (error: any) {
         console.error(`Error creating NFT collection: ${error.toString()}`);

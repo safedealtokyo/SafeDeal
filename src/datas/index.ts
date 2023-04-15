@@ -3,18 +3,10 @@ import { NavItem } from "@/types/NavItem";
 const NAV_ITEMS: NavItem[] = [
   {
     label: "Deals",
-    href: "/deal"
-  },
-  {
-    label: "MyPage",
-    href: "#",
-    children: [
-      {
-        label: "Profile",
-        href: "#",
-        subLabel: "Software development"
-      }
-    ]
+    href: "/"
+  }, {
+    label: "CreateDeal",
+    href: "/deal/create"
   }
 ];
 export default NAV_ITEMS;
