@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-one-expression-per-line */
 import {
   Box,
   HStack,
@@ -13,7 +12,6 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import { MessageListCard } from "@/components/Chat/MessageListCard";
-import Navbar from "@/components/Navbar";
 import { fetchUnique } from "@/pages/api/deal/list";
 
 type Props = {
@@ -43,7 +41,6 @@ export default function Protected({ deal }: Props) {
   }, []);
   return (
     <>
-      <Navbar />
       <VStack mt="60px">
         <Heading px="30px" py="40px">
           Deal Chat

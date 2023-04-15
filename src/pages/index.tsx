@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-one-expression-per-line */
 import {
   Box,
   Card,
@@ -14,7 +13,6 @@ import Link from "next/link";
 import React from "react";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 
-import Navbar from "@/components/Navbar";
 import { addressFormat } from "@/utils/format";
 import { formatDate } from "@/utils/formatDate";
 
@@ -29,7 +27,6 @@ export default function Protected({ deals }: Props) {
   const tempDeals: Deal[] = JSON.parse(deals);
   return (
     <Box mt="60px">
-      <Navbar />
       <Box px="30px" py="30px">
         <VStack>
           <Heading>Deal List</Heading>
