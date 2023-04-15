@@ -22,7 +22,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { Deal, Worker } from "@prisma/client";
-import { useAddress, useContract } from "@thirdweb-dev/react";
+import { useAddress, useContract, useSigner } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
@@ -39,6 +39,7 @@ type Props = {
 const DealStatus: React.FC<Props> = ({ deal }) => {
   const router = useRouter();
   const address = useAddress();
+  const signer = useSigner();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [sumbitMessage, setSubmitMessage] = useState<string>();
   const [proposed, setProposed] = useState<boolean>(false);
@@ -80,16 +81,18 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
 
   useEffect(() => {
     const checkPropose = async () => {
-      const result = await fetchPendingTransactionHash(
-        deal.multiSigAddress as string
-      );
-      console.log("fetchPendingTransactionHash", result);
-      if (result) {
-        setProposed(true);
+      if (signer) {
+        const result = await fetchPendingTransactionHash(
+          deal.multiSigAddress as string
+        );
+        console.log("fetchPendingTransactionHash", result);
+        if (result) {
+          setProposed(true);
+        }
       }
     };
     checkPropose();
-  }, []);
+  }, [signer]);
   // Client
   if (deal.ownerAddress === address) {
     return (
