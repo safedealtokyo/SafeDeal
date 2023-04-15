@@ -17,7 +17,6 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
 import usePush from "@/hooks/usePush";
-import { useToaster } from "@/hooks/useToaster";
 
 const schema = yup.object().shape({
   title: yup.string().required("案件タイトルは必須です"),
@@ -34,15 +33,15 @@ type FormData = yup.InferType<typeof schema>;
 export default function DealCollectionForm() {
   const router = useRouter();
   const address = useAddress();
-  // const { infoToast } = useToaster();
   const { pushTarget } = usePush();
-  const { register, handleSubmit, reset, formState } = useForm<FormData>({
+  const { register, handleSubmit, reset, formState, setValue } = useForm<FormData>({
     resolver: yupResolver(schema)
   });
   const onSubmit = async (data: FormData) => {
     console.log(data);
     if (address) {
       try {
+        setValue("walletAddress", address);
         const response = await axios.post("/api/deal/create", data);
         // infoToast("Deal Created");
         pushTarget("Deal Created", "Deal Created", address);
@@ -125,19 +124,14 @@ export default function DealCollectionForm() {
           </FormControl>
           <FormControl
             id="walletAddress"
-            isInvalid={!!formState.errors.walletAddress}
           >
             <FormLabel>Your Apply Wallet Address</FormLabel>
             <Input
               type="text"
-              defaultValue={address || ""}
               value={address || ""}
               isReadOnly
               {...register("walletAddress")}
             />
-            {formState.errors.walletAddress && (
-              <p>{formState.errors.walletAddress.message}</p>
-            )}
           </FormControl>
           <Button
             width="full"

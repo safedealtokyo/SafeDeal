@@ -1,26 +1,25 @@
 /* eslint-disable consistent-return */
 /* eslint-disable react/jsx-one-expression-per-line */
-import { Button, Center, Container, Heading, VStack } from "@chakra-ui/react";
+import { Button, Heading, VStack } from "@chakra-ui/react";
 import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
-  TableCaption,
-  TableContainer,
+  TableContainer
 } from "@chakra-ui/react";
-import { Deal } from "@prisma/client";
-import { ConnectWallet, useAddress } from "@thirdweb-dev/react";
+import { Deal, Worker } from "@prisma/client";
+import { useAddress } from "@thirdweb-dev/react";
 import axios from "axios";
 import { NextPageContext } from "next";
 import Link from "next/link";
-import { useMemo } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useMemo, useState } from "react";
 
+import { MessageListCard } from "@/components/Chat/MessageListCard";
 import Navbar from "@/components/Navbar";
-import useConnectPushWebScoket from "@/hooks/useConnectPushWebScoket";
 import usePush from "@/hooks/usePush";
 import { fetchUnique } from "@/pages/api/deal/list";
 import { formatDate } from "@/utils/formatDate";
@@ -31,11 +30,27 @@ type Props = {
 
 export default function Protected({ deal }: Props) {
   const address = useAddress();
+  const router = useRouter();
   const tempDeal: Deal & {
     workers: Worker[];
   } = JSON.parse(deal);
+  const [feeds, setFeeds] = useState<
+      Deal & {
+    workers: Worker[];
+  }
+      >();
+  const fetchChatList = async () => {
+    const result = await axios.get(
+      `/api/deal/unique?dealId=${router.query.dealId}`
+    );
+    setFeeds(result.data);
+  };
+
+  useEffect(() => {
+    fetchChatList();
+  }, []);
+
   const { pushTarget } = usePush();
-  // useConnectPushWebScoket();
   const isClient = useMemo(() => {
     if (address && tempDeal) {
       console.log(
@@ -43,15 +58,8 @@ export default function Protected({ deal }: Props) {
       );
       return address.toLowerCase() === tempDeal.ownerAddress.toLowerCase();
     }
-    // console.log("is client false", address, tempDeal.ownerAddress);
     return false;
   }, [address, tempDeal]);
-  // const isClient = () => {
-  //   if (address && tempDeal) {
-  //     return address?.toLowerCase() === tempDeal.ownerAddress.toLowerCase();
-  //   }
-  //   return false;
-  // };
 
   const chatWithClient = async () => {
     // Notify to Client
@@ -63,7 +71,7 @@ export default function Protected({ deal }: Props) {
       console.log("今からこれで紐っづける", tempDeal.id, address);
       await axios.post("/api/deal/workers/create", {
         dealId: tempDeal.id,
-        walletAddress: address,
+        walletAddress: address
       });
     }
   };
@@ -115,11 +123,10 @@ export default function Protected({ deal }: Props) {
           </Table>
         </TableContainer>
         {isClient ? (
-          <Link href={`/deal/${tempDeal.id}/chat`}>
-            <Button width="full" colorScheme="blue" px="35px" mt="10px">
-              Chat with Worker
-            </Button>
-          </Link>
+          <VStack w="80%">
+            <Heading mt={8}>Chat With Workers</Heading>
+            <MessageListCard tempDealId={tempDeal.id} workers={feeds?.workers} />
+          </VStack>
         ) : (
           <Link href={`/deal/${tempDeal.id}/chat/${address}`}>
             <Button
@@ -143,7 +150,7 @@ export async function getServerSideProps(context: NextPageContext) {
   console.log(deal);
   return {
     props: {
-      deal: JSON.stringify(deal),
-    },
+      deal: JSON.stringify(deal)
+    }
   };
 }

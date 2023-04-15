@@ -75,7 +75,8 @@
         "consistent": true
       }
     ],
-    "comma-dangle": ["warn", "never"],
+    "comma-dangle": "off",
+    "import/no-duplicates": "off",
     "operator-linebreak": "off",
     "no-console": "off",
     "no-alert": "off",
