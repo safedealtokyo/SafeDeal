@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 import useChat from "@/hooks/useChat";
+import useSafe from "@/hooks/useSafe";
 
 import Divider from "./Divider";
 import Footer from "./Footer";
@@ -27,6 +28,7 @@ const Chat: React.FC<Props> = ({ deal }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
 
+  const { deploySafe } = useSafe();
   const fetchTargetAddress = () =>
     address?.toLowerCase() === deal.ownerAddress.toLowerCase()
       ? (router.query.workerAddress as string)
@@ -130,7 +132,21 @@ const Chat: React.FC<Props> = ({ deal }) => {
           handleSendMessage={handleSendMessage}
         />
         <HStack>
-          <Button colorScheme="blue" width="full">
+          <Button
+            colorScheme="blue"
+            width="full"
+            onClick={async () => {
+              console.log(
+                "router.query.workerAddress",
+                router.query.workerAddress,
+                deal.fixedFee
+              );
+              await deploySafe(
+                router.query.workerAddress as string,
+                deal.fixedFee
+              );
+            }}
+          >
             Apply Deal
           </Button>
         </HStack>
