@@ -9,7 +9,7 @@ import {
   Text,
   Button,
   HStack,
-  useDisclosure,
+  useDisclosure
 } from "@chakra-ui/react";
 import {
   Modal,
@@ -18,7 +18,7 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton,
+  ModalCloseButton
 } from "@chakra-ui/react";
 import { Deal, Worker } from "@prisma/client";
 import { useAddress } from "@thirdweb-dev/react";
@@ -91,7 +91,7 @@ function Header({ deal, name }: Props) {
         </Button>
       </>
       {/* )} */}
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} size="full">
         <ModalOverlay />
         <ModalContent w="100%">
           <ModalHeader>Huddle</ModalHeader>
