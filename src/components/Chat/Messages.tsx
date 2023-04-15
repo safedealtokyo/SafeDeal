@@ -1,8 +1,7 @@
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable react/no-unstable-nested-components */
-import { Avatar, Flex, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
-import React, { useEffect, useRef } from "react";
+import React from "react";
+import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 
 export type Message = {
   text: string;
@@ -10,16 +9,11 @@ export type Message = {
   timestamp?: number;
 };
 type Props = {
+  name: string;
   messages: Message[];
 };
-function Messages({ messages }: Props) {
+function Messages({ name, messages }: Props) {
   const address = useAddress();
-  //   function AlwaysScrollToBottom() {
-  //     const elementRef = useRef();
-  //     useEffect(() => elementRef.current.scrollIntoView());
-  //     return <div ref={elementRef} />;
-  //   }
-
   return (
     <Flex w="100%" h="80%" overflowY="scroll" flexDirection="column" p="3">
       {messages.map((item, index) => {
@@ -42,11 +36,7 @@ function Messages({ messages }: Props) {
         }
         return (
           <Flex key={index} w="100%">
-            <Avatar
-              name="Computer"
-              src="https://avataaars.io/?avatarStyle=Transparent&topType=LongHairStraight&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light"
-              bg="blue.300"
-            />
+            <Jazzicon diameter={30} seed={jsNumberForAddress(name)} />
             <Flex
               borderRadius="15px"
               bg="gray.100"
@@ -61,7 +51,6 @@ function Messages({ messages }: Props) {
           </Flex>
         );
       })}
-      {/* <AlwaysScrollToBottom /> */}
     </Flex>
   );
 }

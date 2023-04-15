@@ -67,6 +67,8 @@
     "no-param-reassign": "off",
     "no-unused-vars": "off",
     "eslint-disable-next-line": "off",
+    "react/no-array-index-key": "off",
+    "react/jsx-no-useless-fragment": "off",
     "object-curly-newline": [
       "warn",
       {
