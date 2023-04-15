@@ -2,11 +2,8 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 import { ChainId } from "@thirdweb-dev/sdk";
 import type { AppProps } from "next/app";
-import { SessionProvider } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { RecoilRoot } from "recoil";
-
-import useConnectPushWebScoket from "@/hooks/useConnectPushWebScoket";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [activeChain, setActiveChain] = useState<
@@ -29,16 +26,13 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, [process.env.NEXT_PUBLIC_CHAIN]);
 
-  // useConnectPushWebScoket();
   return (
     <RecoilRoot override>
-      <SessionProvider session={pageProps.session}>
-        <ChakraProvider>
-          <ThirdwebProvider activeChain={activeChain}>
-            <Component {...pageProps} />
-          </ThirdwebProvider>
-        </ChakraProvider>
-      </SessionProvider>
+      <ChakraProvider>
+        <ThirdwebProvider activeChain={activeChain}>
+          <Component {...pageProps} />
+        </ThirdwebProvider>
+      </ChakraProvider>
     </RecoilRoot>
   );
 }
