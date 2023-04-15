@@ -48,6 +48,7 @@ function Messages({ messages }: Props) {
               bg="blue.300"
             />
             <Flex
+              borderRadius="15px"
               bg="gray.100"
               color="black"
               minW="100px"

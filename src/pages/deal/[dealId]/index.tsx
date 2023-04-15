@@ -119,7 +119,7 @@ export default function Protected({ deal }: Props) {
             </TableContainer>
             {isClient ? (
               <Link href={`/deal/${tempDeal.id}/chat`}>
-                <Button width="full" colorScheme="blue" px="5px" mt="10px">
+                <Button width="full" colorScheme="blue" px="35px" mt="10px">
                   Chat with Worker
                 </Button>
               </Link>
@@ -128,7 +128,7 @@ export default function Protected({ deal }: Props) {
                 <Button
                   width="full"
                   colorScheme="blue"
-                  px="5px"
+                  px="35px"
                   mt="10px"
                   onClick={chatWithClient}
                 >

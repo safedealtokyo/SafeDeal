@@ -2,7 +2,7 @@
 /* eslint-disable no-confusing-arrow */
 /* eslint-disable react/function-component-definition */
 
-import { Box, Button, Flex, HStack } from "@chakra-ui/react";
+import { Box, Button, Flex, HStack, VStack } from "@chakra-ui/react";
 import { Deal, Worker } from "@prisma/client";
 import { useAddress } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
@@ -10,6 +10,8 @@ import React, { useEffect, useState } from "react";
 
 import useChat from "@/hooks/useChat";
 import useSafe from "@/hooks/useSafe";
+
+import DealStatus from "../DealStatus";
 
 import Divider from "./Divider";
 import Footer from "./Footer";
@@ -131,38 +133,7 @@ const Chat: React.FC<Props> = ({ deal }) => {
           setInputMessage={setInputMessage}
           handleSendMessage={handleSendMessage}
         />
-        {deal.multiSigAddress ? (
-          // Proceccing
-          <Button width="full" colorScheme="cyan">
-            Deal Processing
-          </Button>
-        ) : (
-          // Before Apply Deal
-          <HStack>
-            {deal.ownerAddress === address && (
-              <Button
-                isLoading={isLoading}
-                disabled={isLoading}
-                colorScheme="blue"
-                width="full"
-                onClick={async () => {
-                  console.log(
-                    "router.query.workerAddress",
-                    router.query.workerAddress,
-                    deal.fixedFee
-                  );
-                  await deploySafe(
-                    router.query.dealId as string,
-                    router.query.workerAddress as string,
-                    deal.fixedFee
-                  );
-                }}
-              >
-                Apply Deal
-              </Button>
-            )}
-          </HStack>
-        )}
+        <DealStatus deal={deal} />
       </Flex>
     </Flex>
   );
