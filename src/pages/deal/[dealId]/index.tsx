@@ -19,7 +19,6 @@ import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 
 import { MessageListCard } from "@/components/Chat/MessageListCard";
-import Navbar from "@/components/Navbar";
 import usePush from "@/hooks/usePush";
 import { fetchUnique } from "@/pages/api/deal/list";
 import { formatDate } from "@/utils/formatDate";
@@ -77,10 +76,8 @@ export default function Protected({ deal }: Props) {
 
   return (
     <>
-      <Navbar />
       <VStack mt="80px" w="100%">
         <Heading>Deal Detail</Heading>
-
         <TableContainer w="80%" mt="24px">
           <Table variant="simple" w="100%">
             <Thead>

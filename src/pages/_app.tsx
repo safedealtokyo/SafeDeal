@@ -1,9 +1,11 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import { Box, ChakraProvider } from "@chakra-ui/react";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 import { ChainId } from "@thirdweb-dev/sdk";
 import type { AppProps } from "next/app";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RecoilRoot } from "recoil";
+
+import Navbar from "@/components/Navbar";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [activeChain, setActiveChain] = useState<
@@ -30,7 +32,12 @@ export default function App({ Component, pageProps }: AppProps) {
     <RecoilRoot override>
       <ChakraProvider>
         <ThirdwebProvider activeChain={activeChain}>
-          <Component {...pageProps} />
+          <Box position="relative" zIndex="1">
+            <Navbar />
+          </Box>
+          <Box position="relative" zIndex="0">
+            <Component {...pageProps} />
+          </Box>
         </ThirdwebProvider>
       </ChakraProvider>
     </RecoilRoot>
