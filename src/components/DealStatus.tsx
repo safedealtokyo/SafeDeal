@@ -97,7 +97,7 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
 
                 <ModalFooter width="100%">
                   <Center width="100%">
-                    <MintButtonFromWallet deal={deal} />
+                    <MintButtonFromWallet deal={deal} onClose={onClose} />
                     {/* <Button
                       isLoading={isLoading}
                       isDisabled={isLoading || !sumbitMessage}
