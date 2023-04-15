@@ -25,6 +25,9 @@ export const fetchList = async () => {
     include: {
       workers: true,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
   return result;
 };
