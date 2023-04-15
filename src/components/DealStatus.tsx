@@ -46,15 +46,28 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
   const contract = useContract(deal.contractAddress, "nft-collection");
 
   useEffect(() => {
-    const checkHas = async () => {
+    const checkHasSBT = async () => {
       if (address) {
-        const balance = await contract.contract?.balanceOf(address);
-        if (balance) {
-          setHasSBT(true);
+        if (address.toLowerCase() === deal.ownerAddress.toLowerCase()) {
+          // Clientが開いている場合
+          const balance = await contract.contract?.balanceOf(
+            router.query.workerAddress as string
+          );
+          if (Number(balance) > 0) {
+            console.log("has sbt", Number(balance));
+            setHasSBT(true);
+          }
+        } else {
+          // Worker
+          const balance = await contract.contract?.balanceOf(address);
+          if (Number(balance) > 0) {
+            console.log("has sbt", Number(balance));
+            setHasSBT(true);
+          }
         }
       }
     };
-    checkHas();
+    checkHasSBT();
   }, [address]);
 
   const {
@@ -81,7 +94,12 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
   if (deal.ownerAddress === address) {
     return (
       <>
-        {deal.multiSigAddress ? (
+        {hasSBT ? (
+          // 完了
+          <Button bgColor="black" color="white" width="full">
+            Deal Ended
+          </Button>
+        ) : deal.multiSigAddress ? (
           <VStack w="100%">
             <Button width="full" colorScheme="cyan">
               Deal Processing
@@ -89,7 +107,7 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
             {proposed ? (
               <HStack width="full" justifyContent="space-around">
                 <Button colorScheme="yellow" width="full" onClick={onOpen}>
-                  Good JOB
+                  Good Work
                 </Button>
                 <Button colorScheme="red" width="full">
                   Bad Boy
@@ -101,7 +119,7 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
             <Modal isOpen={isOpen} onClose={onClose}>
               <ModalOverlay />
               <ModalContent>
-                <ModalHeader>Good Job Feedback</ModalHeader>
+                <ModalHeader>Good Work Feedback</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
                   <Textarea
@@ -125,15 +143,15 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
             colorScheme="blue"
             width="full"
             onClick={async () => {
-              console.log(
-                "router.query.workerAddress",
-                router.query.workerAddress,
-                deal.fixedFee
-              );
               await deploySafe(
                 router.query.dealId as string,
                 router.query.workerAddress as string,
                 deal.fixedFee
+              );
+              pushTarget(
+                "Safe Deal",
+                "Start your work",
+                router.query.workerAddress as string
               );
             }}
           >
@@ -146,14 +164,12 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
   return (
     // Worker
     <Center w="100%">
-      {deal.multiSigAddress ? (
-        // 案件成立済み
-        hasSBT ? (
-          // 取引完了
-          <Button width="full" bgColor="black" color="white">
-            Finished your perfect JOB
-          </Button>
-        ) : proposed ? ( // 引き出し申請（仕事の成果を提出した状態）
+      {hasSBT ? ( // // 取引完了
+        <Button width="full" bgColor="black" color="white">
+          Finished your perfect JOB
+        </Button>
+      ) : deal.multiSigAddress ? (
+        proposed ? ( // 引き出し申請（仕事の成果を提出した状態）
           <Button width="full" bgColor="black" color="white">
             Wait Client Approval
           </Button>
@@ -161,7 +177,7 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
           // Proceccing
           <VStack w="100%">
             <Button width="full" colorScheme="cyan" onClick={onOpen}>
-              Submit Your JOB
+              Submit Your Work
             </Button>
           </VStack>
         )
@@ -173,7 +189,7 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Submit Your JOB</ModalHeader>
+          <ModalHeader>Submit Your Work</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Textarea

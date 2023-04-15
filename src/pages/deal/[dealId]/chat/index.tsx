@@ -1,5 +1,13 @@
 /* eslint-disable react/jsx-one-expression-per-line */
-import { Box, Card, Center, HStack, Heading, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Card,
+  Center,
+  HStack,
+  Heading,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { Deal, Worker } from "@prisma/client";
 import { IFeeds } from "@pushprotocol/restapi";
 import { useAddress } from "@thirdweb-dev/react";
@@ -48,10 +56,11 @@ export default function Protected({ deal }: Props) {
   return (
     <>
       <Navbar />
-      <Heading px="30px" py="40px">
-        Deal Chat
-      </Heading>
-      <Center>
+      <VStack mt="60px">
+        <Heading px="30px" py="40px">
+          Deal Chat
+        </Heading>
+
         <HStack alignItems="flex-start">
           <Box>
             <Text fontWeight="bold" fontSize="2xl">
@@ -68,11 +77,11 @@ export default function Protected({ deal }: Props) {
               </Link>
             ))}
           </Box>
-          {/* <Center w="100%"> */}
+          {/* <VStack w="100%"> */}
           {/* <Chat deal={tempDeal} /> */}
-          {/* </Center> */}
+          {/* </VStack> */}
         </HStack>
-      </Center>
+      </VStack>
     </>
   );
 }

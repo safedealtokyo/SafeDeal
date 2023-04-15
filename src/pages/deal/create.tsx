@@ -5,11 +5,11 @@ import Navbar from "@/components/Navbar";
 
 export default function Protected() {
   return (
-    <Box>
+    <Box w="100%">
       <Navbar />
-      <Center>
-        <VStack gap="10px">
-          <Heading>Create Deal</Heading>
+      <Center w="100%">
+        <VStack gap="10px" w="100%">
+          <Heading pt="40px">Create Deal</Heading>
           <DealCollectionForm />
         </VStack>
       </Center>

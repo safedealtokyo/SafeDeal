@@ -6,6 +6,7 @@ export default function Logo() {
       textAlign={{ base: "center", md: "left" }}
       color={useColorModeValue("gray.800", "white")}
       fontWeight="bold"
+      fontSize="2xl"
     >
       SafeDeal
     </Text>

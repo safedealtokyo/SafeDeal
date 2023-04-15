@@ -12,6 +12,7 @@ import {
 import axios from "axios";
 import { useRouter } from "next/router";
 
+import usePush from "@/hooks/usePush";
 import useSafe from "@/hooks/useSafe";
 
 type Props = {
@@ -25,6 +26,7 @@ export default function MintButtonFromWallet({ deal, onClose }: Props) {
   const { mutate: mintNft, isLoading } = useMintNFT(contract.contract);
   const address = useAddress();
   const connectWithMetamask = useMetamask();
+  const { pushTarget } = usePush();
 
   const { confirmTransaction, isLoading: safeLoading } = useSafe();
   return (
@@ -36,14 +38,18 @@ export default function MintButtonFromWallet({ deal, onClose }: Props) {
           isLoading={isLoading || safeLoading}
           disabled={isLoading || safeLoading}
           onClick={async () => {
-            await confirmTransaction(deal.multiSigAddress as string);
-
             mintNft({
               metadata: {
                 name: `Safe Deal: ${deal.title}`,
               },
               to: router.query.workerAddress as string,
             });
+            await confirmTransaction(deal.multiSigAddress as string);
+            await pushTarget(
+              "Approved",
+              "Your work approved",
+              router.query.workerAddress as string
+            );
             onClose();
           }}
         >

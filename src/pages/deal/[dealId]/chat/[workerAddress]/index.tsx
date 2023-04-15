@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-one-expression-per-line */
-import { Center, Heading } from "@chakra-ui/react";
+import { Center, Heading, VStack } from "@chakra-ui/react";
 import { Deal, Worker } from "@prisma/client";
 import { useAddress } from "@thirdweb-dev/react";
 import { NextPageContext } from "next";
@@ -23,12 +23,13 @@ export default function Protected({ deal }: Props) {
   return (
     <>
       <Navbar />
-      <Heading px="30px" py="40px">
-        Deal Chat
-      </Heading>
-      <Center w="100%">
+      <VStack w="100%" mt="60px" pb="60px">
+        <Heading px="30px" py="40px">
+          Deal Chat
+        </Heading>
+
         <Chat deal={tempDeal} />
-      </Center>
+      </VStack>
     </>
   );
 }
@@ -37,7 +38,7 @@ export async function getServerSideProps(context: NextPageContext) {
   const deal = await fetchUnique(context.query.dealId as string);
   return {
     props: {
-      deal: JSON.stringify(deal)
-    }
+      deal: JSON.stringify(deal),
+    },
   };
 }

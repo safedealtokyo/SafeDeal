@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import {
   Box,
   Button,
@@ -10,10 +11,12 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAddress } from "@thirdweb-dev/react";
 import axios from "axios";
+import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
+import usePush from "@/hooks/usePush";
 import { useToaster } from "@/hooks/useToaster";
 
 const schema = yup.object().shape({
@@ -29,25 +32,32 @@ const schema = yup.object().shape({
 type FormData = yup.InferType<typeof schema>;
 
 export default function DealCollectionForm() {
+  const router = useRouter();
   const address = useAddress();
-  const { infoToast } = useToaster();
-  const { register, handleSubmit, formState } = useForm<FormData>({
+  // const { infoToast } = useToaster();
+  const { pushTarget } = usePush();
+  const { register, handleSubmit, reset, formState } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
   const onSubmit = async (data: FormData) => {
     console.log(data);
-    try {
-      const response = await axios.post("/api/deal/create", data);
-      infoToast("Deal Created");
-      return response.data;
-    } catch (error: any) {
-      console.error(`Error creating NFT collection: ${error.toString()}`);
-      return null;
+    if (address) {
+      try {
+        const response = await axios.post("/api/deal/create", data);
+        // infoToast("Deal Created");
+        pushTarget("Deal Created", "Deal Created", address);
+        reset();
+        router.push("/deal");
+        return response.data;
+      } catch (error: any) {
+        console.error(`Error creating NFT collection: ${error.toString()}`);
+        return null;
+      }
     }
   };
 
   return (
-    <Box w={{ base: "md" }}>
+    <Box w={{ base: "80%" }} pb="60px" pt="20px">
       <form onSubmit={handleSubmit(onSubmit)}>
         <VStack spacing={4}>
           <FormControl
