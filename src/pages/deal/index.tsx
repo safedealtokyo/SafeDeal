@@ -24,17 +24,18 @@ type Props = {
 export default function Protected({ deals }: Props) {
   const tempDeals: Deal[] = JSON.parse(deals);
   return (
-    <Box>
+    <Box mt="60px">
       <Navbar />
       <Box px="30px" py="30px">
-        <Heading>Deal List</Heading>
-        <Center>
-          <SimpleGrid columns={3} spacing="24px">
+        <VStack>
+          <Heading>Deal List</Heading>
+
+          <SimpleGrid columns={{ base: 2, md: 3 }} spacing="24px">
             {tempDeals
               .filter((deal) => deal.multiSigAddress === null)
               .map((deal) => (
                 <Link key={deal.id} href={`/deal/${deal.id}`}>
-                  <Card width="300px" py="50px">
+                  <Card width="240px" py="50px">
                     <VStack alignItems="flex-start" px="20px">
                       <Text fontWeight="bold" fontSize="xl">
                         Title:{deal.title}
@@ -42,7 +43,7 @@ export default function Protected({ deals }: Props) {
                       <Text>Prize:{deal.fixedFee} ETH</Text>
                       <Text>Detail:{deal.jobDetails}</Text>
                       <Text>
-                        ApplicationDeadline:
+                        Deadline:
                         {formatDate(deal.applicationDeadline.toString())}
                       </Text>
                     </VStack>
@@ -50,7 +51,7 @@ export default function Protected({ deals }: Props) {
                 </Link>
               ))}
           </SimpleGrid>
-        </Center>
+        </VStack>
         {/* <MintButton
         contractAddress="0xB9b6A92f52b2fcb7CE3f71b90Cf1793101753eC0"
         buttonLabel="取引終了"

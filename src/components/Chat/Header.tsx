@@ -93,10 +93,10 @@ function Header({ deal, name }: Props) {
       {/* )} */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent w="100%">
           <ModalHeader>Huddle</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody w="100%">
             {startHuddle && deal.workers && address && (
               <Huddle
                 roomId={

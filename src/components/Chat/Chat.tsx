@@ -120,7 +120,7 @@ const Chat: React.FC<Props> = ({ deal }) => {
 
   return (
     <Flex w="100%" h="80vh" justify="center" align="center" minW="380px">
-      <Flex w={["100%", "100%", "40%"]} h="90%" flexDir="column">
+      <Flex w="70%" h="90%" flexDir="column">
         <Header
           deal={deal}
           name={

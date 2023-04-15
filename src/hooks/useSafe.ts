@@ -38,13 +38,13 @@ const useSafe = () => {
       setIsLoading(false);
     }
   };
-  const fetchSafe = async () => {
-    const safeService = fetchSafeService();
-    if (address && safeService) {
-      const safe = await safeService.getSafesByOwner(address);
-      return safe.safes[0];
-    }
-  };
+  // const fetchSafe = async () => {
+  //   const safeService = fetchSafeService();
+  //   if (address && safeService) {
+  //     const safe = await safeService.getSafesByOwner(address);
+  //     return safe.safes[0];
+  //   }
+  // };
   const fetchSafeSDK = async (safeAddress: string) => {
     if (signer) {
       const ethAdapterOwner1 = new EthersAdapter({
@@ -101,7 +101,7 @@ const useSafe = () => {
           dealId,
         });
         console.log(result.status, result.statusText, result.data);
-        sendEthToSafe(safeAddress, depositEthAmount);
+        await sendEthToSafe(safeAddress, depositEthAmount);
       } else {
         alert("Wallet not connected");
       }
@@ -162,7 +162,7 @@ const useSafe = () => {
 
   // fetch pending transaction hash
   const fetchPendingTransactionHash = async (safeAddress: string) => {
-    console.log("fetchPendingTransactionHash");
+    console.log("fetchPendingTransactionHash", safeAddress);
     const safeService = fetchSafeService();
     // const safeAddress = await fetchSafe();
     if (safeService && signer && safeAddress) {
@@ -172,9 +172,11 @@ const useSafe = () => {
       );
       // Assumes that the first pending transaction is the transaction you want to confirm
       const transaction = pendingTransactions.results[0];
-      const { safeTxHash } = transaction;
-      // console.log("fetchPendingTransactionHash3", pendingTransactions.results);
-      return safeTxHash;
+      if (transaction) {
+        const { safeTxHash } = transaction;
+        // console.log("fetchPendingTransactionHash3", pendingTransactions.results);
+        return safeTxHash;
+      }
     }
     console.log("fetchPendingTransactionHash4");
   };

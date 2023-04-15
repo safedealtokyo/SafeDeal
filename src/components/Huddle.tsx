@@ -23,7 +23,7 @@ export function Huddle({ roomId }: Props) {
   const fetchIframeConfig = () => ({
     roomUrl: `https://iframe.huddle01.com/${roomId}`,
     height: "600px",
-    width: "80%",
+    width: "400px",
     noBorder: false,
   });
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -66,12 +66,12 @@ export function Huddle({ roomId }: Props) {
 
   return (
     <Center w="100%">
-      <Box>
+      <Box w="100%">
         {isInitialized ? (
-          <Box>
-            <Box>
+          <Box w="100%">
+            <Box w="100%">
               {roomId ? (
-                <Box>
+                <Box w="100%">
                   {/* <Box>
                     Room ID:
                     {roomId}

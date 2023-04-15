@@ -4,7 +4,7 @@ import {
   HamburgerIcon,
   CloseIcon,
   ChevronDownIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
 } from "@chakra-ui/icons";
 import {
   Box,
@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
   PopoverContent,
   useColorModeValue,
-  useDisclosure
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 
@@ -29,11 +29,13 @@ import WEB3LogoutButton from "@/components/WEB3LogoutButton";
 import NAV_ITEMS from "@/datas";
 import { NavItem } from "@/types/NavItem";
 
+import { Bell } from "./BellIcon";
+
 export default function Navbar() {
   const address = useAddress();
   const { isOpen, onToggle } = useDisclosure();
   return (
-    <Box>
+    <Box position="fixed" top={0} w="100%">
       <Flex
         bg={useColorModeValue("white", "gray.800")}
         color={useColorModeValue("gray.600", "white")}
@@ -59,14 +61,18 @@ export default function Navbar() {
             aria-label="Toggle Navigation"
           />
         </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
+        <Flex
+          flex={{ base: 1 }}
+          justify={{ base: "center", md: "start" }}
+          alignItems="center"
+        >
           <Logo />
 
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <DesktopNav />
           </Flex>
         </Flex>
-
+        <Bell />
         <Stack
           flex={{ base: 1, md: 0 }}
           justify="flex-end"
@@ -103,7 +109,7 @@ function DesktopNav() {
                 color={linkColor}
                 _hover={{
                   textDecoration: "none",
-                  color: linkHoverColor
+                  color: linkHoverColor,
                 }}
               >
                 {navItem.label}
@@ -201,7 +207,7 @@ function MobileNavItem({ label, children, href }: NavItem) {
         justify="space-between"
         align="center"
         _hover={{
-          textDecoration: "none"
+          textDecoration: "none",
         }}
       >
         <Text
