@@ -16,13 +16,21 @@ export default async function handler(
     try {
       const roomData = await createIframeRoom();
       try {
-        const user = await prisma.user.create({
-          data: {
-            name: "Sample Taro",
-            email: "taro@example.com",
+        let user = await prisma.user.findUnique({
+          where: {
             walletAddress: req.body.walletAddress,
           },
         });
+        console.log("user exist", user);
+        if (!user) {
+          user = await prisma.user.create({
+            data: {
+              name: "Sample Taro",
+              email: "taro@example.com",
+              walletAddress: req.body.walletAddress,
+            },
+          });
+        }
 
         const worker = await prisma.worker.create({
           data: {

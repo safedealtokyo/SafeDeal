@@ -45,13 +45,13 @@ const useSafe = () => {
       return safe.safes[0];
     }
   };
-  const fetchSafeSDK = async () => {
+  const fetchSafeSDK = async (safeAddress: string) => {
     if (signer) {
       const ethAdapterOwner1 = new EthersAdapter({
         ethers,
         signerOrProvider: signer,
       });
-      const safeAddress = await fetchSafe();
+      // const safeAddress = await fetchSafe();
       const safeSdk = await Safe.create({
         ethAdapter: ethAdapterOwner1,
         safeAddress: safeAddress!,
@@ -110,12 +110,12 @@ const useSafe = () => {
     }
   };
 
-  const proposeTransaction = async () => {
+  const proposeTransaction = async (safeAddress: string) => {
     try {
       setIsLoading(true);
       // Any address can be used. In this example you will use vitalik.eth
       // TODO 取得するコントラクトアカウントの指定
-      const safeSdk = await fetchSafeSDK();
+      const safeSdk = await fetchSafeSDK(safeAddress);
       // Any address can be used. In this example you will use vitalik.eth
       const destination = address;
       console.log("destination:", destination);
@@ -145,7 +145,7 @@ const useSafe = () => {
 
         // Sign transaction to verify that the transaction is coming from owner 1
         const senderSignature = await safeSdk.signTransactionHash(safeTxHash);
-        const safeAddress = await fetchSafe();
+        // const safeAddress = await fetchSafe();
         await safeService.proposeTransaction({
           safeAddress: safeAddress!,
           safeTransactionData: safeTransaction.data,
@@ -161,10 +161,10 @@ const useSafe = () => {
   };
 
   // fetch pending transaction hash
-  const fetchPendingTransactionHash = async () => {
+  const fetchPendingTransactionHash = async (safeAddress: string) => {
     console.log("fetchPendingTransactionHash");
     const safeService = fetchSafeService();
-    const safeAddress = await fetchSafe();
+    // const safeAddress = await fetchSafe();
     if (safeService && signer && safeAddress) {
       console.log("fetchPendingTransactionHash2");
       const pendingTransactions = await safeService.getPendingTransactions(
@@ -173,19 +173,19 @@ const useSafe = () => {
       // Assumes that the first pending transaction is the transaction you want to confirm
       const transaction = pendingTransactions.results[0];
       const { safeTxHash } = transaction;
-      console.log("fetchPendingTransactionHash3", safeTxHash);
+      // console.log("fetchPendingTransactionHash3", pendingTransactions.results);
       return safeTxHash;
     }
     console.log("fetchPendingTransactionHash4");
   };
 
   // Confirm proposed transaction
-  const confirmTransaction = async () => {
+  const confirmTransaction = async (safeAddress: string) => {
     try {
       setIsLoading(true);
       const safeService = fetchSafeService();
-      const safeAddress = await fetchSafe();
-      const safeTxHash = await fetchPendingTransactionHash();
+      // const safeAddress = await fetchSafe();
+      const safeTxHash = await fetchPendingTransactionHash(safeAddress);
       if (safeService && signer && safeTxHash && safeAddress) {
         const ethAdapterOwner = new EthersAdapter({
           ethers,
@@ -199,7 +199,7 @@ const useSafe = () => {
 
         const signature = await safeSdkOwner.signTransactionHash(safeTxHash);
         await safeService.confirmTransaction(safeTxHash, signature.data);
-        await executeTransaction();
+        await executeTransaction(safeAddress);
       }
     } finally {
       setIsLoading(false);
@@ -207,10 +207,10 @@ const useSafe = () => {
   };
 
   // Execute transaction for already confirmed 2 owners
-  const executeTransaction = async () => {
+  const executeTransaction = async (safeAddress: string) => {
     const safeService = fetchSafeService();
-    const safeSdk = await fetchSafeSDK();
-    const safeTxHash = await fetchPendingTransactionHash();
+    const safeSdk = await fetchSafeSDK(safeAddress);
+    const safeTxHash = await fetchPendingTransactionHash(safeAddress);
     if (safeService && safeSdk && safeTxHash) {
       const safeTransaction = await safeService.getTransaction(safeTxHash);
       const executeTxResponse = await safeSdk.executeTransaction(
@@ -259,33 +259,33 @@ const useSafe = () => {
   };
 
   // Reject safe proposed tx
-  const rejectTransaction = async (
-    destinationAddress: string,
-    withdrawAmount: string
-  ) => {
-    const destination = destinationAddress;
-    const amount = ethers.utils.parseUnits(withdrawAmount, "ether").toString();
-    const safeService = fetchSafeService();
-    const safeSdk = await fetchSafeSDK();
-    const safeTxHash = await fetchPendingTransactionHash();
-    if (safeService && safeSdk && safeTxHash) {
-      const safeTransactionData: SafeTransactionDataPartial = {
-        to: destination,
-        data: "0x",
-        value: amount,
-      };
-      const safeTransaction = await safeSdk.createTransaction({
-        safeTransactionData,
-      });
-      const rejectTx = await safeSdk.createRejectionTransaction(
-        safeTransaction.data.nonce
-      );
+  // const rejectTransaction = async (
+  //   destinationAddress: string,
+  //   withdrawAmount: string
+  // ) => {
+  //   const destination = destinationAddress;
+  //   const amount = ethers.utils.parseUnits(withdrawAmount, "ether").toString();
+  //   const safeService = fetchSafeService();
+  //   const safeSdk = await fetchSafeSDK(safeAddress);
+  //   const safeTxHash = await fetchPendingTransactionHash(safeAddress);
+  //   if (safeService && safeSdk && safeTxHash) {
+  //     const safeTransactionData: SafeTransactionDataPartial = {
+  //       to: destination,
+  //       data: "0x",
+  //       value: amount,
+  //     };
+  //     const safeTransaction = await safeSdk.createTransaction({
+  //       safeTransactionData,
+  //     });
+  //     const rejectTx = await safeSdk.createRejectionTransaction(
+  //       safeTransaction.data.nonce
+  //     );
 
-      const executeTxResponse = await safeSdk.executeTransaction(rejectTx);
-      console.log("Transaction rejected:");
-      console.log(`https://goerli.etherscan.io/tx/${executeTxResponse}`);
-    }
-  };
+  //     const executeTxResponse = await safeSdk.executeTransaction(rejectTx);
+  //     console.log("Transaction rejected:");
+  //     console.log(`https://goerli.etherscan.io/tx/${executeTxResponse}`);
+  //   }
+  // };
 
   return {
     isLoading,
@@ -293,7 +293,7 @@ const useSafe = () => {
     proposeTransaction,
     confirmTransaction,
     executeTransaction,
-    rejectTransaction,
+    // rejectTransaction,
     fetchPendingTransactionHash,
   };
 };

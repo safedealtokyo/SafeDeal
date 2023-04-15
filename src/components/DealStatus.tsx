@@ -28,6 +28,8 @@ import React, { useEffect, useState } from "react";
 import usePush from "@/hooks/usePush";
 import useSafe from "@/hooks/useSafe";
 
+import MintButtonFromWallet from "./MintButtonFromWallet";
+
 type Props = {
   deal: Deal & {
     workers: Worker[];
@@ -50,8 +52,10 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
 
   useEffect(() => {
     const checkPropose = async () => {
-      const result = await fetchPendingTransactionHash();
-      console.log(result);
+      const result = await fetchPendingTransactionHash(
+        deal.multiSigAddress as string
+      );
+      console.log("fetchPendingTransactionHash", result);
       if (result) {
         setProposed(true);
       }
@@ -67,14 +71,55 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
             <Button width="full" colorScheme="cyan">
               Deal Processing
             </Button>
-            <HStack width="full" justifyContent="space-around">
-              <Button colorScheme="yellow" width="full">
-                Good JOB
-              </Button>
-              <Button colorScheme="red" width="full">
-                Bad Boy
-              </Button>
-            </HStack>
+            {proposed ? (
+              <HStack width="full" justifyContent="space-around">
+                <Button colorScheme="yellow" width="full" onClick={onOpen}>
+                  Good JOB
+                </Button>
+                <Button colorScheme="red" width="full">
+                  Bad Boy
+                </Button>
+              </HStack>
+            ) : (
+              <></>
+            )}
+            <Modal isOpen={isOpen} onClose={onClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Good Job Feedback</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Textarea
+                    placeholder="write your job results"
+                    onChange={(e) => setSubmitMessage(e.target.value)}
+                  />
+                </ModalBody>
+
+                <ModalFooter width="100%">
+                  <Center width="100%">
+                    <MintButtonFromWallet deal={deal} onClose={onClose} />
+                    {/* <Button
+                      isLoading={isLoading}
+                      isDisabled={isLoading || !sumbitMessage}
+                      colorScheme="blue"
+                      mr={3}
+                      onClick={async () => {
+                        await proposeTransaction();
+                        await pushTarget(
+                          "Submit",
+                          sumbitMessage as string,
+                          deal.ownerAddress
+                        );
+                        onClose();
+                      }}
+                      width="full"
+                    >
+                      Submit
+                    </Button> */}
+                  </Center>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
           </VStack>
         ) : (
           <Button
@@ -136,7 +181,7 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
                 colorScheme="blue"
                 mr={3}
                 onClick={async () => {
-                  await proposeTransaction();
+                  await proposeTransaction(deal.multiSigAddress as string);
                   await pushTarget(
                     "Submit",
                     sumbitMessage as string,

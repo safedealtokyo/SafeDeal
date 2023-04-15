@@ -52,7 +52,7 @@ function SafePage() {
         <Text fontSize="2xl" fontWeight="bold">
           Deploy Safe
         </Text>
-        <Button colorScheme="blue" onClick={proposeTransaction}>
+        <Button colorScheme="blue" onClick={() => proposeTransaction("")}>
           Propose Withdraw Transaction (Workerが実行する想定でバリデーション)
         </Button>
       </VStack>
@@ -61,7 +61,7 @@ function SafePage() {
         <Text fontSize="2xl" fontWeight="bold">
           Fetch Safe
         </Text>
-        <Button onClick={confirmTransaction}>
+        <Button onClick={() => confirmTransaction("")}>
           Confirm & Execute
           Transaction(クライアントが実行する想定でバリデーション)
         </Button>
@@ -71,7 +71,7 @@ function SafePage() {
         <Text fontSize="2xl" fontWeight="bold">
           Fetch Safe
         </Text>
-        <Button onClick={confirmTransaction}>
+        <Button onClick={() => confirmTransaction("")}>
           Confirm Transaction(クライアントが実行する想定でバリデーション)
         </Button>
       </VStack>
