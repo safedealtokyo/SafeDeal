@@ -2,16 +2,20 @@
 import {
   Box,
   Card,
-  Heading,
-  SimpleGrid,
+  Heading, HStack,
+  SimpleGrid, Stack,
   Text,
   VStack
 } from "@chakra-ui/react";
 import { Deal } from "@prisma/client";
+import { useAddress } from "@thirdweb-dev/react";
 import { NextPageContext } from "next";
 import Link from "next/link";
+import React from "react";
+import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 
 import Navbar from "@/components/Navbar";
+import { addressFormat } from "@/utils/format";
 import { formatDate } from "@/utils/formatDate";
 
 import { fetchList } from "./api/deal/list";
@@ -21,6 +25,7 @@ type Props = {
 };
 
 export default function Protected({ deals }: Props) {
+  const address = useAddress();
   const tempDeals: Deal[] = JSON.parse(deals);
   return (
     <Box mt="60px">
@@ -28,7 +33,6 @@ export default function Protected({ deals }: Props) {
       <Box px="30px" py="30px">
         <VStack>
           <Heading>Deal List</Heading>
-
           <SimpleGrid columns={{ base: 2, md: 3 }} spacing="24px">
             {tempDeals
               .filter((deal) => deal.multiSigAddress === null)
@@ -36,6 +40,16 @@ export default function Protected({ deals }: Props) {
                 <Link key={deal.id} href={`/deal/${deal.id}`}>
                   <Card width="240px" py="50px">
                     <VStack alignItems="flex-start" px="20px">
+                      <Stack direction="row" justify="space-between" spacing="4">
+                        <HStack spacing="3">
+                          <Jazzicon diameter={30} seed={jsNumberForAddress(deal.ownerAddress)} />
+                          <Box>
+                            <Text fontWeight="medium" color="emphasized" textDecoration="none">
+                              {address === deal.ownerAddress ? "created by you" : addressFormat(deal.ownerAddress)}
+                            </Text>
+                          </Box>
+                        </HStack>
+                      </Stack>
                       <Text fontWeight="bold" fontSize="xl">
                         Title:{deal.title}
                       </Text>
