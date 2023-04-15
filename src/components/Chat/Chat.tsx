@@ -1,7 +1,8 @@
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-confusing-arrow */
 /* eslint-disable react/function-component-definition */
-import { Button, Flex } from "@chakra-ui/react";
+import { RepeatIcon } from "@chakra-ui/icons";
+import { Button, Flex, HStack } from "@chakra-ui/react";
 import { Deal, Worker } from "@prisma/client";
 import { useAddress } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
@@ -123,11 +124,16 @@ const Chat: React.FC<Props> = ({ deal }) => {
         <Messages messages={messages} />
         <Divider />
         <Footer
+          fetchNewConversion={fetchNewConversion}
           inputMessage={inputMessage}
           setInputMessage={setInputMessage}
           handleSendMessage={handleSendMessage}
         />
-        <Button onClick={fetchNewConversion}>Fetch</Button>
+        <HStack>
+          <Button colorScheme="blue" width="full">
+            Apply Deal
+          </Button>
+        </HStack>
       </Flex>
     </Flex>
   );

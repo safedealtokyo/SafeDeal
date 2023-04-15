@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-curly-newline */
 /* eslint-disable implicit-arrow-linebreak */
+import { RepeatIcon } from "@chakra-ui/icons";
 import { Flex, Input, Button } from "@chakra-ui/react";
 import { IMessageIPFS } from "@pushprotocol/restapi";
 import { useAddress } from "@thirdweb-dev/react";
@@ -11,11 +12,17 @@ type Props = {
   inputMessage: string;
   setInputMessage: React.Dispatch<React.SetStateAction<string>>;
   handleSendMessage: () => void;
+  fetchNewConversion: () => Promise<void>;
 };
-function Footer({ inputMessage, setInputMessage, handleSendMessage }: Props) {
+function Footer({
+  inputMessage,
+  setInputMessage,
+  handleSendMessage,
+  fetchNewConversion,
+}: Props) {
   const address = useAddress();
   return (
-    <Flex w="100%" mt="5">
+    <Flex w="100%" mt="5" mb="10px" alignItems="center">
       <Input
         placeholder="Type Something..."
         border="none"
@@ -31,10 +38,10 @@ function Footer({ inputMessage, setInputMessage, handleSendMessage }: Props) {
         value={inputMessage}
         onChange={(e) => setInputMessage(e.target.value)}
       />
+      <RepeatIcon mr="10px" boxSize="6" onClick={fetchNewConversion} />
       <Button
         bg="black"
         color="white"
-        borderRadius="none"
         _hover={{
           bg: "white",
           color: "black",
