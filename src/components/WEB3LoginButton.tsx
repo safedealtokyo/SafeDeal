@@ -27,7 +27,7 @@ export default function Web3LoginButton() {
       onClick={handleLogin}
       colorScheme="teal"
       as="a"
-      display={{ base: "none", md: "inline-flex" }}
+      display={{ md: "inline-flex" }}
       fontSize="sm"
       fontWeight={600}
       color="white"
