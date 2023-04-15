@@ -30,20 +30,12 @@ model Deal {
 model Worker {
   id            String   @id @default(cuid())
   walletAddress String
-  userId        String
-  worker        User     @relation(fields: [userId], references: [id])
+  roomId        String
   dealId        String
   deal          Deal     @relation(fields: [dealId], references: [id])
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
   @@index([dealId])
-  @@index([userId])
-}
-
-model User {
-  id        String   @id @default(cuid())
-  works     Worker[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@index([walletAddress])
 }

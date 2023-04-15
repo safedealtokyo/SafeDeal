@@ -32,7 +32,7 @@ export default function Protected({ deals, session }: Props) {
       <Navbar session={session} />
       <Heading>Dealページ</Heading>
       <Center>
-        <SimpleGrid columns={2} spacing="24px">
+        <SimpleGrid columns={4} spacing="24px">
           {tempDeals.map((deal) => (
             <Link key={deal.id} href={`/deal/${deal.id}`}>
               <Card width="200px" py="20px">

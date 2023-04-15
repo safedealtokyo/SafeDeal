@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { Deal } from "@prisma/client";
 import { ConnectWallet, useAddress } from "@thirdweb-dev/react";
+import axios from "axios";
 import { NextPageContext } from "next";
 import Link from "next/link";
 import { getSession } from "next-auth/react";
@@ -38,7 +39,13 @@ export default function Protected({ session, deal }: Props) {
     return false;
   };
 
-  const chatWithClient = () => {
+  const chatWithClient = async () => {
+    // Create record
+    await axios.post("/api/deal/workers/create", {
+      dealId: tempDeal.id,
+      walletAddress: address,
+    });
+
     // Notify to Client
     // Open Chat Modal
   };
@@ -48,7 +55,7 @@ export default function Protected({ session, deal }: Props) {
       <Container mt="30px">
         <Heading>Deal Detail</Heading>
         <Center w="80%">
-          <VStack>
+          <VStack w="100%">
             <TableContainer w="100%" mt="24px">
               <Table variant="simple" w="100%">
                 <Thead>
@@ -99,13 +106,18 @@ export default function Protected({ session, deal }: Props) {
               </Link>
             ) : (
               <Link href={`/deal/${tempDeal.id}/chat/${address}`}>
-                <Button width="full" colorScheme="blue" px="5px" mt="10px">
+                <Button
+                  width="full"
+                  colorScheme="blue"
+                  px="5px"
+                  mt="10px"
+                  onClick={chatWithClient}
+                >
                   Chat with Client
                 </Button>
               </Link>
             )}
           </VStack>
-          <ConnectWallet />
         </Center>
       </Container>
     </>
