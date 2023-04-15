@@ -21,19 +21,16 @@ import {
   useColorModeValue,
   useDisclosure
 } from "@chakra-ui/react";
+import { useAddress } from "@thirdweb-dev/react";
 
 import Logo from "@/components/Logo";
 import Web3LoginButton from "@/components/WEB3LoginButton";
 import WEB3LogoutButton from "@/components/WEB3LogoutButton";
 import NAV_ITEMS from "@/datas";
 import { NavItem } from "@/types/NavItem";
-import { UserSession } from "@/types/UserSession";
 
-type Props = {
-  session: UserSession;
-};
-
-export default function Navbar({ session }: Props) {
+export default function Navbar() {
+  const address = useAddress();
   const { isOpen, onToggle } = useDisclosure();
   return (
     <Box>
@@ -76,7 +73,7 @@ export default function Navbar({ session }: Props) {
           direction="row"
           spacing={6}
         />
-        {session ? <WEB3LogoutButton session={session} /> : <Web3LoginButton />}
+        {address ? <WEB3LogoutButton address={address} /> : <Web3LoginButton />}
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>

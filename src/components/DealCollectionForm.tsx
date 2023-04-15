@@ -8,12 +8,11 @@ import {
   VStack
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useAddress } from "@thirdweb-dev/react";
 import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-
-import { UserSession } from "@/types/UserSession";
 
 const schema = yup.object().shape({
   title: yup.string().required("案件タイトルは必須です"),
@@ -27,12 +26,8 @@ const schema = yup.object().shape({
 
 type FormData = yup.InferType<typeof schema>;
 
-type Props = {
-  session: UserSession;
-};
-
-export default function DealCollectionForm({ session }: Props) {
-  const address :string = session?.address;
+export default function DealCollectionForm() {
+  const address = useAddress();
   const { register, handleSubmit, formState } = useForm<FormData>({
     resolver: yupResolver(schema)
   });
