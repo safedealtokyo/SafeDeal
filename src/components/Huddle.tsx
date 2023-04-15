@@ -23,8 +23,8 @@ export function Huddle({ roomId }: Props) {
   const fetchIframeConfig = () => ({
     roomUrl: `https://iframe.huddle01.com/${roomId}`,
     height: "600px",
-    width: "400px",
-    noBorder: false,
+    width: "80%",
+    noBorder: false
   });
   const videoRef = useRef<HTMLVideoElement>(null);
   const { state, send } = useMeetingMachine();
