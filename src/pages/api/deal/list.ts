@@ -21,7 +21,11 @@ export default async function handler(
 }
 
 export const fetchList = async () => {
-  const result = await prisma.deal.findMany({});
+  const result = await prisma.deal.findMany({
+    include: {
+      workers: true,
+    },
+  });
   return result;
 };
 
