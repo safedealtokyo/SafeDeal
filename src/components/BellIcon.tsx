@@ -45,7 +45,7 @@ export function Bell() {
       }
     };
     fetchnot();
-  }, []);
+  }, [address]);
 
   return (
     <>
