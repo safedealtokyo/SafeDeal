@@ -6,6 +6,8 @@ import { SessionProvider } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { RecoilRoot } from "recoil";
 
+import useConnectPushWebScoket from "@/hooks/useConnectPushWebScoket";
+
 export default function App({ Component, pageProps }: AppProps) {
   const [activeChain, setActiveChain] = useState<
     ChainId.Goerli | ChainId.Polygon
@@ -26,6 +28,8 @@ export default function App({ Component, pageProps }: AppProps) {
       }
     }
   }, [process.env.NEXT_PUBLIC_CHAIN]);
+
+  useConnectPushWebScoket();
 
   return (
     <RecoilRoot override>
