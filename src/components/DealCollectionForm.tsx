@@ -14,6 +14,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
+import { useToaster } from "@/hooks/useToaster";
+
 const schema = yup.object().shape({
   title: yup.string().required("案件タイトルは必須です"),
   fixedFee: yup.string().required("固定報酬は必須です"),
@@ -28,6 +30,7 @@ type FormData = yup.InferType<typeof schema>;
 
 export default function DealCollectionForm() {
   const address = useAddress();
+  const { infoToast } = useToaster();
   const { register, handleSubmit, formState } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
@@ -35,6 +38,7 @@ export default function DealCollectionForm() {
     console.log(data);
     try {
       const response = await axios.post("/api/deal/create", data);
+      infoToast("Deal Created");
       return response.data;
     } catch (error: any) {
       console.error(`Error creating NFT collection: ${error.toString()}`);
@@ -51,7 +55,7 @@ export default function DealCollectionForm() {
             isInvalid={!!formState.errors.title}
             isRequired
           >
-            <FormLabel>案件タイトル</FormLabel>
+            <FormLabel>Deal Title</FormLabel>
             <Input type="text" {...register("title")} />
             {formState.errors.title && <p>{formState.errors.title.message}</p>}
           </FormControl>
@@ -60,7 +64,7 @@ export default function DealCollectionForm() {
             isInvalid={!!formState.errors.fixedFee}
             isRequired
           >
-            <FormLabel>固定報酬</FormLabel>
+            <FormLabel>Reward</FormLabel>
             <Input type="number" step="0.0001" {...register("fixedFee")} />
             {formState.errors.fixedFee && (
               <p>{formState.errors.fixedFee.message}</p>
@@ -71,7 +75,7 @@ export default function DealCollectionForm() {
             isInvalid={!!formState.errors.jobDetails}
             isRequired
           >
-            <FormLabel>仕事の詳細</FormLabel>
+            <FormLabel>Detail</FormLabel>
             <Textarea {...register("jobDetails")} />
             {formState.errors.jobDetails && (
               <p>{formState.errors.jobDetails.message}</p>
@@ -81,7 +85,7 @@ export default function DealCollectionForm() {
             id="specialNotes"
             isInvalid={!!formState.errors.specialNotes}
           >
-            <FormLabel>特記事項</FormLabel>
+            <FormLabel>Notes</FormLabel>
             <Textarea {...register("specialNotes")} />
             {formState.errors.specialNotes && (
               <p>{formState.errors.specialNotes.message}</p>
@@ -92,7 +96,7 @@ export default function DealCollectionForm() {
             isInvalid={!!formState.errors.applicationDeadline}
             isRequired
           >
-            <FormLabel>応募期限</FormLabel>
+            <FormLabel>Apply Deadline</FormLabel>
             <Input type="date" {...register("applicationDeadline")} />
             {formState.errors.applicationDeadline && (
               <p>{formState.errors.applicationDeadline.message}</p>
@@ -103,7 +107,7 @@ export default function DealCollectionForm() {
             isInvalid={!!formState.errors.deliveryDate}
             isRequired
           >
-            <FormLabel>納品完了日</FormLabel>
+            <FormLabel>Delivery Date</FormLabel>
             <Input type="date" {...register("deliveryDate")} />
             {formState.errors.deliveryDate && (
               <p>{formState.errors.deliveryDate.message}</p>
@@ -113,7 +117,7 @@ export default function DealCollectionForm() {
             id="walletAddress"
             isInvalid={!!formState.errors.walletAddress}
           >
-            <FormLabel>あなたのウォレットアドレス</FormLabel>
+            <FormLabel>Your Apply Wallet Address</FormLabel>
             <Input
               type="text"
               defaultValue={address || ""}
@@ -126,11 +130,12 @@ export default function DealCollectionForm() {
             )}
           </FormControl>
           <Button
+            width="full"
             type="submit"
             colorScheme="blue"
             isLoading={formState.isSubmitting}
           >
-            送信
+            Sumbit
           </Button>
         </VStack>
       </form>

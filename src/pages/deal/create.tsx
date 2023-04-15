@@ -8,8 +8,8 @@ export default function Protected() {
     <Box>
       <Navbar />
       <Center>
-        <VStack>
-          <Heading>Deal作成ページ</Heading>
+        <VStack gap="10px">
+          <Heading>Create Deal</Heading>
           <DealCollectionForm />
         </VStack>
       </Center>

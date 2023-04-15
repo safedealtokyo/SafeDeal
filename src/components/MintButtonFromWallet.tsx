@@ -40,7 +40,7 @@ export default function MintButtonFromWallet({ deal, onClose }: Props) {
 
             mintNft({
               metadata: {
-                name: "My awesome NFT",
+                name: `Safe Deal: ${deal.title}`,
               },
               to: router.query.workerAddress as string,
             });
