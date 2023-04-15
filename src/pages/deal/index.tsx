@@ -6,30 +6,27 @@ import {
   Heading,
   SimpleGrid,
   Text,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
 import { Deal } from "@prisma/client";
 import { NextPageContext } from "next";
 import Link from "next/link";
-import { getSession } from "next-auth/react";
 
 import MintButton from "@/components/MintButton";
 import MintButtonFromWallet from "@/components/MintButtonFromWallet";
 import Navbar from "@/components/Navbar";
-import { UserSession } from "@/types/UserSession";
 
 import { fetchList } from "../api/deal/list";
 
 type Props = {
   deals: string;
-  session: UserSession;
 };
 
-export default function Protected({ deals, session }: Props) {
+export default function Protected({ deals }: Props) {
   const tempDeals: Deal[] = JSON.parse(deals);
   return (
     <Box>
-      <Navbar session={session} />
+      <Navbar />
       <Heading>Dealページ</Heading>
       <Center>
         <SimpleGrid columns={4} spacing="24px">
@@ -56,19 +53,9 @@ export default function Protected({ deals, session }: Props) {
 
 export async function getServerSideProps(context: NextPageContext) {
   const deals = await fetchList();
-  const session = await getSession(context);
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
   return {
     props: {
-      session,
-      deals: JSON.stringify(deals),
-    },
+      deals: JSON.stringify(deals)
+    }
   };
 }

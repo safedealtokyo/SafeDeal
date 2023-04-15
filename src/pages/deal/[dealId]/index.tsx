@@ -10,28 +10,25 @@ import {
   Th,
   Td,
   TableCaption,
-  TableContainer,
+  TableContainer
 } from "@chakra-ui/react";
 import { Deal } from "@prisma/client";
 import { ConnectWallet, useAddress } from "@thirdweb-dev/react";
 import axios from "axios";
 import { NextPageContext } from "next";
 import Link from "next/link";
-import { getSession } from "next-auth/react";
 
 import Navbar from "@/components/Navbar";
 import useConnectPushWebScoket from "@/hooks/useConnectPushWebScoket";
 import usePush from "@/hooks/usePush";
 import { fetchUnique } from "@/pages/api/deal/list";
-import { UserSession } from "@/types/UserSession";
 import { formatDate } from "@/utils/formatDate";
 
 type Props = {
   deal: string;
-  session: UserSession;
 };
 
-export default function Protected({ session, deal }: Props) {
+export default function Protected({ deal }: Props) {
   const address = useAddress();
   const tempDeal: Deal & {
     workers: Worker[];
@@ -53,14 +50,14 @@ export default function Protected({ session, deal }: Props) {
       // Create record
       await axios.post("/api/deal/workers/create", {
         dealId: tempDeal.id,
-        walletAddress: address,
+        walletAddress: address
       });
     }
   };
 
   return (
     <>
-      <Navbar session={session} />
+      <Navbar />
       <Container mt="30px">
         <Heading>Deal Detail</Heading>
         <Center w="80%">
@@ -136,19 +133,9 @@ export default function Protected({ session, deal }: Props) {
 export async function getServerSideProps(context: NextPageContext) {
   const deal = await fetchUnique(context.query.dealId as string);
   console.log(deal);
-  const session = await getSession(context);
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
   return {
     props: {
-      session,
-      deal: JSON.stringify(deal),
-    },
+      deal: JSON.stringify(deal)
+    }
   };
 }

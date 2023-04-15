@@ -10,23 +10,18 @@ import {
   HStack
 } from "@chakra-ui/react";
 import { useDisconnect } from "@thirdweb-dev/react";
-import { signOut } from "next-auth/react";
-
-import { UserSession } from "@/types/UserSession";
 
 type Props = {
-  session: UserSession;
-};
+  address:string
+}
 
-export default function WEB3LogoutButton({ session }: Props) {
+export default function WEB3LogoutButton({ address }: Props) {
   const disconnect = useDisconnect();
-  const image = session?.user?.image || "";
-  const address = session?.address;
+  const image = "";
   console.log(address);
   const truncatedAddress = `${address?.slice(0, 3)}...${address?.slice(-3)}`;
   const handleLogout = async () => {
     try {
-      await signOut({ callbackUrl: "/" });
       await disconnect();
     } catch (error) {
       console.log(error);
