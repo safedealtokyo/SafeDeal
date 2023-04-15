@@ -63,7 +63,6 @@ export default function Protected({ deal }: Props) {
 
   const chatWithClient = async () => {
     // Notify to Client
-    console.log("CHAAAAAAAT");
     if (tempDeal) {
       console.log("notify", tempDeal.ownerAddress);
       await pushTarget("Chat Start", "Chat Start", tempDeal.ownerAddress);
@@ -97,7 +96,7 @@ export default function Protected({ deal }: Props) {
               </Tr>
               <Tr>
                 <Td>Client</Td>
-                <Td>{tempDeal.ownerAddress}</Td>
+                <Td>{tempDeal.ownerAddress} {tempDeal.ownerAddress === address && "(you)" }</Td>
               </Tr>
               <Tr>
                 <Td>Price</Td>

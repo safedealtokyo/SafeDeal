@@ -33,42 +33,46 @@ export function MessageListCard({ tempDealId, workers }:Props) {
 
   return (
     <Center maxW="mx" mx="auto" py={{ base: "4", md: "8" }}>
-      <Box boxShadow="base" py={4}>
-        <Stack divider={<StackDivider />} spacing="4">
-          {workers && workers?.map((feed) => (
-            <Link
-              _hover={{ textDecoration: "none" }}
-              key={feed.userId}
-              bg="white"
-              href={`/deal/${tempDealId}/chat/${feed.walletAddress}`}
-            >
-              <Stack key={feed.userId} fontSize="sm" px="4" spacing="4">
-                <Stack direction="row" justify="space-between" spacing="4">
-                  <HStack spacing="3">
-                    <Jazzicon diameter={30} seed={jsNumberForAddress(feed.walletAddress)} />
-                    <Box>
-                      <Text fontWeight="medium" color="emphasized" textDecoration="none">
-                        {feed.walletAddress}
-                      </Text>
-                    </Box>
-                  </HStack>
-                </Stack>
-                <Text
-                  color="muted"
-                  sx={{
-                    "-webkit-box-orient": "vertical",
-                    "-webkit-line-clamp": "2",
-                    overflow: "hidden",
-                    display: "-webkit-box"
-                  }}
+      {workers && workers.length > 0 ?
+        (
+          <Box boxShadow="base" py={4}>
+            <Stack divider={<StackDivider />} spacing="4">
+              {workers?.map((feed) => (
+                <Link
+                  _hover={{ textDecoration: "none" }}
+                  key={feed.userId}
+                  bg="white"
+                  href={`/deal/${tempDealId}/chat/${feed.walletAddress}`}
                 >
-                  {getRandomMessage()}
-                </Text>
-              </Stack>
-            </Link>
-          ))}
-        </Stack>
-      </Box>
+                  <Stack key={feed.userId} fontSize="sm" px="4" spacing="4">
+                    <Stack direction="row" justify="space-between" spacing="4">
+                      <HStack spacing="3">
+                        <Jazzicon diameter={30} seed={jsNumberForAddress(feed.walletAddress)} />
+                        <Box>
+                          <Text fontWeight="medium" color="emphasized" textDecoration="none">
+                            {feed.walletAddress}
+                          </Text>
+                        </Box>
+                      </HStack>
+                    </Stack>
+                    <Text
+                      color="muted"
+                      sx={{
+                        "-webkit-box-orient": "vertical",
+                        "-webkit-line-clamp": "2",
+                        overflow: "hidden",
+                        display: "-webkit-box"
+                      }}
+                    >
+                      {getRandomMessage()}
+                    </Text>
+                  </Stack>
+                </Link>
+              ))}
+            </Stack>
+          </Box>
+        )
+        : <Text>You  have not yet received any messages from the Worker.</Text>}
     </Center>
   );
 }
