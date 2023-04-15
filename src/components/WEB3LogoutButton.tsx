@@ -44,14 +44,8 @@ export default function WEB3LogoutButton({ address }: Props) {
         </HStack>
       </MenuButton>
       <MenuList>
-        <MenuItem>Link 1</MenuItem>
-        <MenuItem>Link 2</MenuItem>
-        <MenuDivider />
         <MenuItem
           onClick={handleLogout}
-          _hover={{
-            bg: "pink.300"
-          }}
         >
           Logout
         </MenuItem>
