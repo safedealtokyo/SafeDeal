@@ -30,6 +30,9 @@ export const fetchUnique = async (dealId: string) => {
     where: {
       id: dealId,
     },
+    include: {
+      workers: true,
+    },
   });
   return result;
 };

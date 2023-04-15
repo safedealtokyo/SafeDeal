@@ -14,11 +14,14 @@ import {
 } from "@chakra-ui/react";
 import { Deal } from "@prisma/client";
 import { ConnectWallet, useAddress } from "@thirdweb-dev/react";
+import axios from "axios";
 import { NextPageContext } from "next";
 import Link from "next/link";
 import { getSession } from "next-auth/react";
 
 import Navbar from "@/components/Navbar";
+import useConnectPushWebScoket from "@/hooks/useConnectPushWebScoket";
+import usePush from "@/hooks/usePush";
 import { fetchUnique } from "@/pages/api/deal/list";
 import { UserSession } from "@/types/UserSession";
 import { formatDate } from "@/utils/formatDate";
@@ -30,25 +33,38 @@ type Props = {
 
 export default function Protected({ session, deal }: Props) {
   const address = useAddress();
-  const tempDeal: Deal = JSON.parse(deal);
+  const tempDeal: Deal & {
+    workers: Worker[];
+  } = JSON.parse(deal);
+  const { pushTarget } = usePush();
+  useConnectPushWebScoket();
   const isClient = () => {
-    if (address) {
+    if (address && tempDeal) {
       return address?.toLowerCase() === tempDeal.ownerAddress.toLowerCase();
     }
     return false;
   };
 
-  const chatWithClient = () => {
+  const chatWithClient = async () => {
     // Notify to Client
-    // Open Chat Modal
+    if (tempDeal) {
+      console.log("notify", tempDeal.ownerAddress);
+      await pushTarget("Chat Start", "Chat Start", tempDeal.ownerAddress);
+      // Create record
+      await axios.post("/api/deal/workers/create", {
+        dealId: tempDeal.id,
+        walletAddress: address,
+      });
+    }
   };
+
   return (
     <>
       <Navbar session={session} />
       <Container mt="30px">
         <Heading>Deal Detail</Heading>
         <Center w="80%">
-          <VStack>
+          <VStack w="100%">
             <TableContainer w="100%" mt="24px">
               <Table variant="simple" w="100%">
                 <Thead>
@@ -99,13 +115,18 @@ export default function Protected({ session, deal }: Props) {
               </Link>
             ) : (
               <Link href={`/deal/${tempDeal.id}/chat/${address}`}>
-                <Button width="full" colorScheme="blue" px="5px" mt="10px">
+                <Button
+                  width="full"
+                  colorScheme="blue"
+                  px="5px"
+                  mt="10px"
+                  onClick={chatWithClient}
+                >
                   Chat with Client
                 </Button>
               </Link>
             )}
           </VStack>
-          <ConnectWallet />
         </Center>
       </Container>
     </>

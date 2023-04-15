@@ -2,7 +2,7 @@
 /* eslint-disable no-confusing-arrow */
 /* eslint-disable react/function-component-definition */
 import { Button, Flex } from "@chakra-ui/react";
-import { Deal } from "@prisma/client";
+import { Deal, Worker } from "@prisma/client";
 import { useAddress } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -15,7 +15,9 @@ import Header from "./Header";
 import Messages, { Message } from "./Messages";
 
 type Props = {
-  deal: Deal;
+  deal: Deal & {
+    workers: Worker[];
+  };
 };
 const Chat: React.FC<Props> = ({ deal }) => {
   const router = useRouter();
@@ -110,6 +112,7 @@ const Chat: React.FC<Props> = ({ deal }) => {
     <Flex w="100%" h="80vh" justify="center" align="center" minW="380px">
       <Flex w={["100%", "100%", "40%"]} h="90%" flexDir="column">
         <Header
+          deal={deal}
           name={
             address?.toLowerCase() === deal.ownerAddress.toLowerCase()
               ? (router.query.workerAddress as string)

@@ -9,7 +9,7 @@ import {
   HStack,
   Input,
   Text,
-  VStack
+  VStack,
 } from "@chakra-ui/react";
 import { useAddress, useSigner } from "@thirdweb-dev/react";
 import { useState } from "react";
@@ -29,7 +29,7 @@ export default function Home() {
     fetchListOfUserChatRequest,
     fetchChatConversationOfTwo,
     sendChatMessage,
-    approveRequest
+    approveRequest,
   } = useChat();
 
   return (
@@ -91,7 +91,7 @@ export default function Home() {
         <Text fontSize="2xl" fontWeight="bold">
           Huddle
         </Text>
-        <Huddle />
+        {/* <Huddle /> */}
       </VStack>
     </Container>
   );

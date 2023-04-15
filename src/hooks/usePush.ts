@@ -17,7 +17,7 @@ const usePush = () => {
     account: address,
     chainId: ChainId.Goerli,
     env: "staging",
-    isCAIP: false
+    isCAIP: false,
   });
   function sleep(milliseconds: number) {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -26,7 +26,7 @@ const usePush = () => {
     const res = await axios.post("/api/push", {
       title,
       message,
-      kind: "broadcast"
+      kind: "broadcast",
     });
   };
   const pushTarget = async (
@@ -38,7 +38,7 @@ const usePush = () => {
       title,
       message,
       kind: "target",
-      recipient: targetAddress
+      recipient: targetAddress,
     });
   };
 
@@ -60,7 +60,7 @@ const usePush = () => {
           console.error("opt in error");
         },
         // @ts-ignore
-        env: "staging"
+        env: "staging",
       });
     }
   };
@@ -78,7 +78,7 @@ const usePush = () => {
           console.error("opt out error");
         },
         // @ts-ignore
-        env: "staging"
+        env: "staging",
       });
     }
   };
@@ -88,7 +88,7 @@ const usePush = () => {
       const subscriptions: any[] = await PushAPI.user.getSubscriptions({
         user: `eip155:${ChainId.Goerli}:${address}`, // user address in CAIP
         // @ts-ignore
-        env: "staging"
+        env: "staging",
       });
       console.log(subscriptions);
       const filterdList = subscriptions.filter(
@@ -101,25 +101,25 @@ const usePush = () => {
     return false;
   }, []);
 
-  useEffect(() => {
-    const connectSocket = async () => {
-      console.log(
-        "socketData",
-        socketData.pushSDKSocket?.connected,
-        socketData.isSDKSocketConnected
-      );
-      if (
-        socketData &&
-        socketData.pushSDKSocket &&
-        !socketData.pushSDKSocket?.connected
-      ) {
-        console.log("connect");
-        socketData.pushSDKSocket?.connect();
-        await sleep(1000);
-      }
-    };
-    connectSocket();
-  }, [socketData]);
+  // useEffect(() => {
+  //   const connectSocket = async () => {
+  //     console.log(
+  //       "socketData",
+  //       socketData.pushSDKSocket?.connected,
+  //       socketData.isSDKSocketConnected
+  //     );
+  //     if (
+  //       socketData &&
+  //       socketData.pushSDKSocket &&
+  //       !socketData.pushSDKSocket?.connected
+  //     ) {
+  //       console.log("connect");
+  //       socketData.pushSDKSocket?.connect();
+  //       await sleep(1000);
+  //     }
+  //   };
+  //   connectSocket();
+  // }, [socketData]);
 
   useEffect(() => {
     const check = async () => {
@@ -136,7 +136,7 @@ const usePush = () => {
     handleOptOut,
     fetchNotification,
     pushBroadcast,
-    pushTarget
+    pushTarget,
   };
 };
 
