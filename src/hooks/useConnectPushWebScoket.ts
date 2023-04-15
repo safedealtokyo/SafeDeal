@@ -6,8 +6,10 @@ import { ChainId } from "@thirdweb-dev/sdk";
 import { useEffect } from "react";
 
 import { useSDKSocket } from "./useSDKSocket";
+import { useToaster } from "./useToaster";
 
 const useConnectPushWebScoket = () => {
+  const { infoToast } = useToaster();
   const address = useAddress();
   const socketData = useSDKSocket({
     account: address,
@@ -38,6 +40,18 @@ const useConnectPushWebScoket = () => {
     };
     connectSocket();
   }, [socketData]);
+
+  // メッセージの更新取得と通知
+  useEffect(() => {
+    if (socketData.feedsSinceLastConnection[0]) {
+      const last = socketData.feedsSinceLastConnection.length - 1;
+      console.log(
+        "feed",
+        socketData.feedsSinceLastConnection[last].payload.data.amsg
+      );
+      infoToast(socketData.feedsSinceLastConnection[last].payload.data.amsg);
+    }
+  }, [socketData.feedsSinceLastConnection]);
 
   return {
     socketData,

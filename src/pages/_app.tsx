@@ -29,8 +29,7 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, [process.env.NEXT_PUBLIC_CHAIN]);
 
-  useConnectPushWebScoket();
-
+  // useConnectPushWebScoket();
   return (
     <RecoilRoot override>
       <SessionProvider session={pageProps.session}>

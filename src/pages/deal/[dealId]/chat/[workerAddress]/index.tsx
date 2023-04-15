@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import { Center, Heading } from "@chakra-ui/react";
-import { Deal } from "@prisma/client";
+import { Deal, Worker } from "@prisma/client";
 import { NextPageContext } from "next";
 import Link from "next/link";
 import { getSession } from "next-auth/react";
@@ -16,7 +16,9 @@ type Props = {
 };
 
 export default function Protected({ session, deal }: Props) {
-  const tempDeal: Deal = JSON.parse(deal);
+  const tempDeal: Deal & {
+    workers: Worker[];
+  } = JSON.parse(deal);
   const chatWithClient = () => {
     // Notify to Client
     // Open Chat Modal
@@ -36,6 +38,7 @@ export default function Protected({ session, deal }: Props) {
 
 export async function getServerSideProps(context: NextPageContext) {
   const deal = await fetchUnique(context.query.dealId as string);
+  console.log("deal", deal);
   const session = await getSession(context);
   if (!session) {
     return {

@@ -20,6 +20,8 @@ import Link from "next/link";
 import { getSession } from "next-auth/react";
 
 import Navbar from "@/components/Navbar";
+import useConnectPushWebScoket from "@/hooks/useConnectPushWebScoket";
+import usePush from "@/hooks/usePush";
 import { fetchUnique } from "@/pages/api/deal/list";
 import { UserSession } from "@/types/UserSession";
 import { formatDate } from "@/utils/formatDate";
@@ -31,24 +33,31 @@ type Props = {
 
 export default function Protected({ session, deal }: Props) {
   const address = useAddress();
-  const tempDeal: Deal = JSON.parse(deal);
+  const tempDeal: Deal & {
+    workers: Worker[];
+  } = JSON.parse(deal);
+  const { pushTarget } = usePush();
+  useConnectPushWebScoket();
   const isClient = () => {
-    if (address) {
+    if (address && tempDeal) {
       return address?.toLowerCase() === tempDeal.ownerAddress.toLowerCase();
     }
     return false;
   };
 
   const chatWithClient = async () => {
-    // Create record
-    await axios.post("/api/deal/workers/create", {
-      dealId: tempDeal.id,
-      walletAddress: address,
-    });
-
     // Notify to Client
-    // Open Chat Modal
+    if (tempDeal) {
+      console.log("notify", tempDeal.ownerAddress);
+      await pushTarget("Chat Start", "Chat Start", tempDeal.ownerAddress);
+      // Create record
+      await axios.post("/api/deal/workers/create", {
+        dealId: tempDeal.id,
+        walletAddress: address,
+      });
+    }
   };
+
   return (
     <>
       <Navbar session={session} />

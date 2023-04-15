@@ -29,7 +29,7 @@ model Deal {
 
 model Worker {
   id            String   @id @default(cuid())
-  walletAddress String
+  walletAddress String   
   roomId        String
   dealId        String
   deal          Deal     @relation(fields: [dealId], references: [id])
@@ -38,4 +38,5 @@ model Worker {
 
   @@index([dealId])
   @@index([walletAddress])
+  @@unique([dealId, walletAddress])
 }

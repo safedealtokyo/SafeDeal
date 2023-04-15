@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import { Box, Center, HStack, Heading, Text } from "@chakra-ui/react";
-import { Deal } from "@prisma/client";
+import { Deal, Worker } from "@prisma/client";
 import { IFeeds } from "@pushprotocol/restapi";
 import { NextPageContext } from "next";
 import Link from "next/link";
@@ -20,7 +20,9 @@ type Props = {
 };
 
 export default function Protected({ session, deal }: Props) {
-  const tempDeal: Deal = JSON.parse(deal);
+  const tempDeal: Deal & {
+    workers: Worker[];
+  } = JSON.parse(deal);
   const [feeds, setFeeds] = useState<IFeeds[]>();
 
   const { fetchListOfUserChats } = useChat();

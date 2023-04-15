@@ -3,14 +3,18 @@ import { useAddress, useMetamask } from "@thirdweb-dev/react";
 import { signIn } from "next-auth/react";
 import { useEffect } from "react";
 
+import usePush from "@/hooks/usePush";
+
 export default function Web3LoginButton() {
   const address = useAddress();
   const connectWithMetamask = useMetamask();
+  const { handleOptIn } = usePush();
 
   const handleLogin = async () => {
     try {
       if (!address) {
         await connectWithMetamask();
+        await handleOptIn();
         return;
       }
     } catch (error) {
@@ -21,7 +25,7 @@ export default function Web3LoginButton() {
 
   useEffect(() => {
     if (address) {
-      const callbackUrl = "/protected";
+      const callbackUrl = "/deal";
       signIn("credentials", { address, callbackUrl });
     }
   }, [address]);
@@ -38,7 +42,7 @@ export default function Web3LoginButton() {
       bg="pink.400"
       href="#"
       _hover={{
-        bg: "pink.300"
+        bg: "pink.300",
       }}
     >
       {address ? "Sign In with Wallet" : "Connect Wallet"}

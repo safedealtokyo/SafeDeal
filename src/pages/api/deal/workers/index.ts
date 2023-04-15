@@ -12,27 +12,19 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { body } = req;
-  if (req.method === "POST") {
+  if (req.method === "GET") {
     try {
-      const roomData = await createIframeRoom();
-      try {
-        const worker = await prisma.worker.create({
-          data: {
-            roomId: roomData.data.roomId,
-            walletAddress: req.body.walletAddress,
-            deal: {
-              connect: {
-                id: req.body.dealId,
-              },
-            },
+      console.log(req.query);
+      const worker = await prisma.worker.findUnique({
+        where: {
+          dealId_walletAddress: {
+            dealId: req.query.dealId as string,
+            walletAddress: req.query.walletAddress as string,
           },
-        });
+        },
+      });
 
-        return res.status(200).json(worker);
-      } catch (e) {
-        // workerがいるかどうかの判定排除
-        return res.status(200).json("already");
-      }
+      return res.status(200).json(worker);
     } catch (error) {
       console.log(error);
       return res.status(500).json(error);
