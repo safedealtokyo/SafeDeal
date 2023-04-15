@@ -3,7 +3,7 @@ import React from "react";
 
 function Divider() {
   return (
-    <ChakraDivider w="100%" borderBottomWidth="3px" color="black" mt="5" />
+    <ChakraDivider w="100%" borderBottomWidth="2px" color="black" mt="5" />
   );
 }
 

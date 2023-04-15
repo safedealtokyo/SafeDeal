@@ -10,13 +10,14 @@ import {
   Th,
   Td,
   TableCaption,
-  TableContainer
+  TableContainer,
 } from "@chakra-ui/react";
 import { Deal } from "@prisma/client";
 import { ConnectWallet, useAddress } from "@thirdweb-dev/react";
 import axios from "axios";
 import { NextPageContext } from "next";
 import Link from "next/link";
+import { useMemo } from "react";
 
 import Navbar from "@/components/Navbar";
 import useConnectPushWebScoket from "@/hooks/useConnectPushWebScoket";
@@ -35,22 +36,34 @@ export default function Protected({ deal }: Props) {
   } = JSON.parse(deal);
   const { pushTarget } = usePush();
   useConnectPushWebScoket();
-  const isClient = () => {
+  const isClient = useMemo(() => {
     if (address && tempDeal) {
-      return address?.toLowerCase() === tempDeal.ownerAddress.toLowerCase();
+      console.log(
+        address.toLowerCase() === tempDeal.ownerAddress.toLowerCase()
+      );
+      return address.toLowerCase() === tempDeal.ownerAddress.toLowerCase();
     }
+    // console.log("is client false", address, tempDeal.ownerAddress);
     return false;
-  };
+  }, [address, tempDeal]);
+  // const isClient = () => {
+  //   if (address && tempDeal) {
+  //     return address?.toLowerCase() === tempDeal.ownerAddress.toLowerCase();
+  //   }
+  //   return false;
+  // };
 
   const chatWithClient = async () => {
     // Notify to Client
+    console.log("CHAAAAAAAT");
     if (tempDeal) {
       console.log("notify", tempDeal.ownerAddress);
       await pushTarget("Chat Start", "Chat Start", tempDeal.ownerAddress);
       // Create record
+      console.log("今からこれで紐っづける", tempDeal.id, address);
       await axios.post("/api/deal/workers/create", {
         dealId: tempDeal.id,
-        walletAddress: address
+        walletAddress: address,
       });
     }
   };
@@ -104,7 +117,7 @@ export default function Protected({ deal }: Props) {
                 </Tbody>
               </Table>
             </TableContainer>
-            {isClient() ? (
+            {isClient ? (
               <Link href={`/deal/${tempDeal.id}/chat`}>
                 <Button width="full" colorScheme="blue" px="5px" mt="10px">
                   Chat with Worker
@@ -135,7 +148,7 @@ export async function getServerSideProps(context: NextPageContext) {
   console.log(deal);
   return {
     props: {
-      deal: JSON.stringify(deal)
-    }
+      deal: JSON.stringify(deal),
+    },
   };
 }

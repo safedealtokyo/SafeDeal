@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable react/jsx-no-useless-fragment */
 import {
   Flex,
@@ -63,6 +64,12 @@ function Header({ deal, name }: Props) {
             <Flex flexDirection="column" mx="5" justify="center">
               <Text fontSize="lg" fontWeight="bold">
                 {addressFormat(name)}
+              </Text>
+              <Text fontSize="xs" fontWeight="semibold">
+                {deal.title}
+              </Text>
+              <Text fontSize="xs" fontWeight="semibold">
+                {deal.fixedFee} ETH
               </Text>
             </Flex>
           </HStack>
