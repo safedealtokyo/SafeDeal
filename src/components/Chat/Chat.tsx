@@ -47,8 +47,8 @@ const Chat: React.FC<Props> = ({ deal }) => {
       {
         from: address!,
         text: data,
-        timestamp: new Date().getTime()
-      }
+        timestamp: new Date().getTime(),
+      },
     ]);
     setInputMessage("");
   };
@@ -72,8 +72,8 @@ const Chat: React.FC<Props> = ({ deal }) => {
             {
               from: result[0].fromDID.replace("eip155:", ""),
               text: result[0].messageContent,
-              timestamp: result[0].timestamp
-            }
+              timestamp: result[0].timestamp,
+            },
           ]);
         }
       }
@@ -92,13 +92,13 @@ const Chat: React.FC<Props> = ({ deal }) => {
             router.query.workerAddress as string,
             "history"
           );
-          console.log(conversionHistory);
+          console.log("conversionHistory", conversionHistory);
         } else {
           conversionHistory = await fetchChatConversationOfTwo(
             deal.ownerAddress,
             "history"
           );
-          console.log(conversionHistory);
+          console.log("conversionHistory", conversionHistory);
         }
 
         if (conversionHistory) {
@@ -107,14 +107,14 @@ const Chat: React.FC<Props> = ({ deal }) => {
             .map((message) => ({
               text: message.messageContent,
               from: message.fromDID.replace("eip155:", ""),
-              timestamp: message.timestamp
+              timestamp: message.timestamp,
             }));
           setMessages(mes);
         }
       };
       fetch();
     }
-  }, []);
+  }, [address]);
 
   return (
     <Flex w="100%" h="80vh" justify="center" align="center" minW="380px">
@@ -130,10 +130,10 @@ const Chat: React.FC<Props> = ({ deal }) => {
         <Divider />
         <Messages
           name={
-          address?.toLowerCase() === deal.ownerAddress.toLowerCase()
-            ? (router.query.workerAddress as string)
-            : deal.ownerAddress
-        }
+            address?.toLowerCase() === deal.ownerAddress.toLowerCase()
+              ? (router.query.workerAddress as string)
+              : deal.ownerAddress
+          }
           messages={messages}
         />
         <Divider />
