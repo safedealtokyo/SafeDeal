@@ -1,14 +1,18 @@
+/* eslint-disable comma-dangle */
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-console */
 /* eslint-disable no-promise-executor-return */
 import { useAddress } from "@thirdweb-dev/react";
 import { ChainId } from "@thirdweb-dev/sdk";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+import { Message } from "@/components/Chat/Messages";
 
 import { useSDKSocket } from "./useSDKSocket";
 import { useToaster } from "./useToaster";
 
 const useConnectPushWebScoket = () => {
+  const [notifyList, setNotifyList] = useState<Message[]>([]);
   const { infoToast } = useToaster();
   const address = useAddress();
   const socketData = useSDKSocket({
@@ -49,12 +53,30 @@ const useConnectPushWebScoket = () => {
         "feed",
         socketData.feedsSinceLastConnection[last].payload.data.amsg
       );
+      setNotifyList((old: Message[]) => [
+        ...old,
+        {
+          text: socketData.feedsSinceLastConnection[last].payload.amsg,
+          from: socketData.feedsSinceLastConnection[last].payload.asub,
+          timestamp: socketData.feedsSinceLastConnection[last].payload.epoch,
+        },
+      ]);
+      // setNotifyList((old) => [
+      //   ...old,
+      //   {
+      //     title: socketData.feedsSinceLastConnection[last].payload.asub,
+      //     message: socketData.feedsSinceLastConnection[last].payload.amsg,
+      //     timestamp: socketData.feedsSinceLastConnection[last].payload.epoch,
+      //   },
+      // ]);
+      console.log("notify", socketData.feedsSinceLastConnection[last].payload);
       infoToast(socketData.feedsSinceLastConnection[last].payload.data.amsg);
     }
   }, [socketData.feedsSinceLastConnection]);
 
   return {
     socketData,
+    notifyList,
   };
 };
 
