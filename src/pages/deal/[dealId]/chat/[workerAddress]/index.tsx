@@ -1,21 +1,18 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import { Center, Heading } from "@chakra-ui/react";
 import { Deal, Worker } from "@prisma/client";
+import { useAddress } from "@thirdweb-dev/react";
 import { NextPageContext } from "next";
-import Link from "next/link";
-import { getSession } from "next-auth/react";
 
 import Chat from "@/components/Chat/Chat";
 import Navbar from "@/components/Navbar";
 import { fetchUnique } from "@/pages/api/deal/list";
-import { UserSession } from "@/types/UserSession";
 
 type Props = {
   deal: string;
-  session: UserSession;
 };
 
-export default function Protected({ session, deal }: Props) {
+export default function Protected({ deal }: Props) {
   const tempDeal: Deal & {
     workers: Worker[];
   } = JSON.parse(deal);
@@ -25,7 +22,7 @@ export default function Protected({ session, deal }: Props) {
   };
   return (
     <>
-      <Navbar session={session} />
+      <Navbar />
       <Heading px="30px" py="40px">
         Deal Chat
       </Heading>
@@ -38,20 +35,9 @@ export default function Protected({ session, deal }: Props) {
 
 export async function getServerSideProps(context: NextPageContext) {
   const deal = await fetchUnique(context.query.dealId as string);
-  console.log("deal", deal);
-  const session = await getSession(context);
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
   return {
     props: {
-      session,
-      deal: JSON.stringify(deal),
-    },
+      deal: JSON.stringify(deal)
+    }
   };
 }

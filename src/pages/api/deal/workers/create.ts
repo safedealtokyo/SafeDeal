@@ -16,16 +16,25 @@ export default async function handler(
     try {
       const roomData = await createIframeRoom();
       try {
+        const user = await prisma.user.create({
+          data: {
+            name: "",
+            email: "",
+            walletAddress: req.body.walletAddress
+          }
+        });
+
         const worker = await prisma.worker.create({
           data: {
             roomId: roomData.data.roomId,
             walletAddress: req.body.walletAddress,
             deal: {
               connect: {
-                id: req.body.dealId,
-              },
+                id: req.body.dealId
+              }
             },
-          },
+            userId: user.id
+          }
         });
 
         return res.status(200).json(worker);

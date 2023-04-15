@@ -1,7 +1,6 @@
 import { Button } from "@chakra-ui/react";
 import { useAddress, useMetamask } from "@thirdweb-dev/react";
-import { signIn } from "next-auth/react";
-import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 import usePush from "@/hooks/usePush";
 
@@ -23,13 +22,6 @@ export default function Web3LoginButton() {
     }
   };
 
-  useEffect(() => {
-    if (address) {
-      const callbackUrl = "/deal";
-      signIn("credentials", { address, callbackUrl });
-    }
-  }, [address]);
-
   return (
     <Button
       onClick={handleLogin}
@@ -42,7 +34,7 @@ export default function Web3LoginButton() {
       bg="pink.400"
       href="#"
       _hover={{
-        bg: "pink.300",
+        bg: "pink.300"
       }}
     >
       {address ? "Sign In with Wallet" : "Connect Wallet"}
