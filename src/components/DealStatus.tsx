@@ -148,11 +148,12 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
                 router.query.workerAddress as string,
                 deal.fixedFee
               );
-              pushTarget(
+              await pushTarget(
                 "Safe Deal",
                 "Start your work",
                 router.query.workerAddress as string
               );
+              router.reload();
             }}
           >
             Apply Deal
