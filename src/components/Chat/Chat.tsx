@@ -63,19 +63,24 @@ const Chat: React.FC<Props> = ({ deal }) => {
         : deal.ownerAddress,
       "latest"
     );
-    // @ts-ignore
-    if (result?.[0]?.timestamp > messages[messages.length - 1].timestamp) {
-      console.log("latest", result);
-      if (result) {
-        setMessages((old) => [
-          ...old,
-          {
-            from: result[0].fromDID.replace("eip155:", ""),
-            text: result[0].messageContent,
-            timestamp: result[0].timestamp,
-          },
-        ]);
+    console.log(result);
+    try {
+      // @ts-ignore
+      if (result?.[0]?.timestamp > messages[messages.length - 1].timestamp) {
+        console.log("latest", result);
+        if (result) {
+          setMessages((old) => [
+            ...old,
+            {
+              from: result[0].fromDID.replace("eip155:", ""),
+              text: result[0].messageContent,
+              timestamp: result[0].timestamp,
+            },
+          ]);
+        }
       }
+    } catch (e) {
+      console.error(e);
     }
   };
 

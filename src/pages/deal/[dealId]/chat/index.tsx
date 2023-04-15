@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-one-expression-per-line */
-import { Box, Center, HStack, Heading, Text } from "@chakra-ui/react";
+import { Box, Card, Center, HStack, Heading, Text } from "@chakra-ui/react";
 import { Deal, Worker } from "@prisma/client";
 import { IFeeds } from "@pushprotocol/restapi";
 import { useAddress } from "@thirdweb-dev/react";
@@ -54,15 +54,17 @@ export default function Protected({ deal }: Props) {
       <Center>
         <HStack alignItems="flex-start">
           <Box>
-            <Text>Chat List</Text>
+            <Text fontWeight="bold" fontSize="2xl">
+              Chat List
+            </Text>
             {feeds?.workers?.map((feed) => (
               <Link
                 key={feed.userId}
                 href={`/deal/${tempDeal.id}/chat/${feed.walletAddress}`}
               >
-                <Box>
+                <Card px="30px" py="20px">
                   <Text>{addressFormat(feed.walletAddress)}</Text>
-                </Box>
+                </Card>
               </Link>
             ))}
           </Box>

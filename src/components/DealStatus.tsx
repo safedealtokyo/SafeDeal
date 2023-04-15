@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/jsx-no-useless-fragment */
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-confusing-arrow */
@@ -21,7 +22,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { Deal, Worker } from "@prisma/client";
-import { useAddress } from "@thirdweb-dev/react";
+import { useAddress, useContract } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
@@ -41,6 +42,20 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [sumbitMessage, setSubmitMessage] = useState<string>();
   const [proposed, setProposed] = useState<boolean>(false);
+  const [hasSBT, setHasSBT] = useState<boolean>(false);
+  const contract = useContract(deal.contractAddress, "nft-collection");
+
+  useEffect(() => {
+    const checkHas = async () => {
+      if (address) {
+        const balance = await contract.contract?.balanceOf(address);
+        if (balance) {
+          setHasSBT(true);
+        }
+      }
+    };
+    checkHas();
+  }, [address]);
 
   const {
     deploySafe,
@@ -98,24 +113,6 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
                 <ModalFooter width="100%">
                   <Center width="100%">
                     <MintButtonFromWallet deal={deal} onClose={onClose} />
-                    {/* <Button
-                      isLoading={isLoading}
-                      isDisabled={isLoading || !sumbitMessage}
-                      colorScheme="blue"
-                      mr={3}
-                      onClick={async () => {
-                        await proposeTransaction();
-                        await pushTarget(
-                          "Submit",
-                          sumbitMessage as string,
-                          deal.ownerAddress
-                        );
-                        onClose();
-                      }}
-                      width="full"
-                    >
-                      Submit
-                    </Button> */}
                   </Center>
                 </ModalFooter>
               </ModalContent>
@@ -147,9 +144,16 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
     );
   }
   return (
+    // Worker
     <Center w="100%">
-      {deal.multiSigAddress &&
-        (proposed ? (
+      {deal.multiSigAddress ? (
+        // 案件成立済み
+        hasSBT ? (
+          // 取引完了
+          <Button width="full" bgColor="black" color="white">
+            Finished your perfect JOB
+          </Button>
+        ) : proposed ? ( // 引き出し申請（仕事の成果を提出した状態）
           <Button width="full" bgColor="black" color="white">
             Wait Client Approval
           </Button>
@@ -160,7 +164,12 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
               Submit Your JOB
             </Button>
           </VStack>
-        ))}
+        )
+      ) : (
+        // Workerからは申請できない
+        <></>
+      )}
+
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

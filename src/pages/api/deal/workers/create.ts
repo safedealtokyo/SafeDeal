@@ -1,8 +1,5 @@
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { multicallData } from "@/datas/multicallData";
-import { formatFormData } from "@/utils/formatJson";
 import { prisma } from "@/utils/prisma";
 
 import { createIframeRoom } from "../../huddle/room";
@@ -15,23 +12,23 @@ export default async function handler(
   if (req.method === "POST") {
     try {
       const roomData = await createIframeRoom();
-      try {
-        let user = await prisma.user.findUnique({
-          where: {
+
+      let user = await prisma.user.findUnique({
+        where: {
+          walletAddress: req.body.walletAddress,
+        },
+      });
+      console.log("user exist", user);
+      if (!user) {
+        user = await prisma.user.create({
+          data: {
+            name: "Sample Taro",
+            email: "taro@example.com",
             walletAddress: req.body.walletAddress,
           },
         });
-        console.log("user exist", user);
-        if (!user) {
-          user = await prisma.user.create({
-            data: {
-              name: "Sample Taro",
-              email: "taro@example.com",
-              walletAddress: req.body.walletAddress,
-            },
-          });
-        }
-
+      }
+      try {
         const worker = await prisma.worker.create({
           data: {
             roomId: roomData.data.roomId,
