@@ -10,12 +10,14 @@ import {
   HStack
 } from "@chakra-ui/react";
 import { useDisconnect } from "@thirdweb-dev/react";
+import { useRouter } from "next/router";
 
 type Props = {
   address:string
 }
 
 export default function WEB3LogoutButton({ address }: Props) {
+  const router = useRouter();
   const disconnect = useDisconnect();
   const image = "";
   console.log(address);
@@ -44,8 +46,14 @@ export default function WEB3LogoutButton({ address }: Props) {
         </HStack>
       </MenuButton>
       <MenuList>
-        <MenuItem>Link 1</MenuItem>
-        <MenuItem>Link 2</MenuItem>
+        <MenuItem
+          onClick={() => router.push("/mypage")}
+          _hover={{
+            bg: "primary"
+          }}
+        >
+          Mypage
+        </MenuItem>
         <MenuDivider />
         <MenuItem
           onClick={handleLogout}

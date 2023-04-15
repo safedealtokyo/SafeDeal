@@ -5,12 +5,13 @@ import {
 } from "@chakra-ui/react";
 
 import Navbar from "@/components/Navbar";
+import { SectionHeader } from "@/components/SectionHeader";
 
 export default function Protected() {
   return (
     <Box>
       <Navbar />
-      <Heading>取引一覧ページ</Heading>
+      <SectionHeader />
     </Box>
   );
 }
