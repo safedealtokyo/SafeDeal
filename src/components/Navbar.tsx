@@ -4,7 +4,7 @@ import {
   HamburgerIcon,
   CloseIcon,
   ChevronDownIcon,
-  ChevronRightIcon,
+  ChevronRightIcon
 } from "@chakra-ui/icons";
 import {
   Box,
@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
   PopoverContent,
   useColorModeValue,
-  useDisclosure,
+  useDisclosure, Spacer
 } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 
@@ -48,7 +48,7 @@ export default function Navbar() {
         align="center"
       >
         <Flex
-          flex={{ base: 1, md: "auto" }}
+          flex={{ base: 1 }}
           ml={{ base: -2 }}
           display={{ base: "flex", md: "none" }}
         >
@@ -72,14 +72,16 @@ export default function Navbar() {
             <DesktopNav />
           </Flex>
         </Flex>
-        <Bell />
         <Stack
-          flex={{ base: 1, md: 0 }}
+          flex={{ base: 1 }}
           justify="flex-end"
           direction="row"
-          spacing={6}
-        />
-        {address ? <WEB3LogoutButton address={address} /> : <Web3LoginButton />}
+        >
+          <Box py={2} px={0} m={0}>
+            <Bell />
+          </Box>
+          {address ? <WEB3LogoutButton address={address} /> : <Web3LoginButton />}
+        </Stack>
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
@@ -109,7 +111,7 @@ function DesktopNav() {
                 color={linkColor}
                 _hover={{
                   textDecoration: "none",
-                  color: linkHoverColor,
+                  color: linkHoverColor
                 }}
               >
                 {navItem.label}
@@ -187,6 +189,7 @@ function MobileNav() {
       bg={useColorModeValue("white", "gray.800")}
       p={4}
       display={{ md: "none" }}
+      zIndex={1000000}
     >
       {NAV_ITEMS.map((navItem) => (
         <MobileNavItem key={navItem.label} {...navItem} />
@@ -197,7 +200,6 @@ function MobileNav() {
 
 function MobileNavItem({ label, children, href }: NavItem) {
   const { isOpen, onToggle } = useDisclosure();
-
   return (
     <Stack spacing={4} onClick={children && onToggle}>
       <Flex
@@ -207,7 +209,7 @@ function MobileNavItem({ label, children, href }: NavItem) {
         justify="space-between"
         align="center"
         _hover={{
-          textDecoration: "none",
+          textDecoration: "none"
         }}
       >
         <Text

@@ -7,7 +7,7 @@ import {
   MenuItem,
   MenuDivider,
   Text,
-  HStack,
+  HStack
 } from "@chakra-ui/react";
 import { useDisconnect } from "@thirdweb-dev/react";
 
@@ -34,13 +34,13 @@ export default function WEB3LogoutButton({ address }: Props) {
       <MenuButton
         as={Button}
         bg="white"
-        display={{ base: "none", md: "inline-flex" }}
+        display={{ md: "inline-flex" }}
         fontSize="sm"
         fontWeight={600}
       >
         <HStack>
           <Avatar size="sm" src={image} />
-          <Text>{truncatedAddress}</Text>
+          <Text display={{ sm: "none", md: "inline" }}>{truncatedAddress}</Text>
         </HStack>
       </MenuButton>
       <MenuList>
@@ -50,7 +50,7 @@ export default function WEB3LogoutButton({ address }: Props) {
         <MenuItem
           onClick={handleLogout}
           _hover={{
-            bg: "pink.300",
+            bg: "pink.300"
           }}
         >
           Logout
