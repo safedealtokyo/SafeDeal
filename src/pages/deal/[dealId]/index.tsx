@@ -8,7 +8,7 @@ import {
   Tr,
   Th,
   Td,
-  TableContainer
+  TableContainer,
 } from "@chakra-ui/react";
 import { Deal, Worker } from "@prisma/client";
 import { useAddress } from "@thirdweb-dev/react";
@@ -34,10 +34,10 @@ export default function Protected({ deal }: Props) {
     workers: Worker[];
   } = JSON.parse(deal);
   const [feeds, setFeeds] = useState<
-      Deal & {
-    workers: Worker[];
-  }
-      >();
+    Deal & {
+      workers: Worker[];
+    }
+  >();
   const fetchChatList = async () => {
     const result = await axios.get(
       `/api/deal/unique?dealId=${router.query.dealId}`
@@ -66,10 +66,9 @@ export default function Protected({ deal }: Props) {
       console.log("notify", tempDeal.ownerAddress);
       await pushTarget("Chat Start", "Chat Start", tempDeal.ownerAddress);
       // Create record
-      console.log("今からこれで紐っづける", tempDeal.id, address);
       await axios.post("/api/deal/workers/create", {
         dealId: tempDeal.id,
-        walletAddress: address
+        walletAddress: address,
       });
     }
   };
@@ -93,7 +92,10 @@ export default function Protected({ deal }: Props) {
               </Tr>
               <Tr>
                 <Td>Client</Td>
-                <Td>{tempDeal.ownerAddress} {tempDeal.ownerAddress === address && "(you)" }</Td>
+                <Td>
+                  {tempDeal.ownerAddress}{" "}
+                  {tempDeal.ownerAddress === address && "(you)"}
+                </Td>
               </Tr>
               <Tr>
                 <Td>Price</Td>
@@ -121,7 +123,10 @@ export default function Protected({ deal }: Props) {
         {isClient ? (
           <VStack w="80%">
             <Heading mt={8}>Chat With Workers</Heading>
-            <MessageListCard tempDealId={tempDeal.id} workers={feeds?.workers} />
+            <MessageListCard
+              tempDealId={tempDeal.id}
+              workers={feeds?.workers}
+            />
           </VStack>
         ) : (
           <Link href={`/deal/${tempDeal.id}/chat/${address}`}>
@@ -146,7 +151,7 @@ export async function getServerSideProps(context: NextPageContext) {
   console.log(deal);
   return {
     props: {
-      deal: JSON.stringify(deal)
-    }
+      deal: JSON.stringify(deal),
+    },
   };
 }
