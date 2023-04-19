@@ -90,7 +90,6 @@ const usePush = () => {
         // @ts-ignore
         env: "staging",
       });
-      console.log(subscriptions);
       const filterdList = subscriptions.filter(
         (subscription) =>
           subscription.channel.toLowerCase() ===
@@ -100,26 +99,6 @@ const usePush = () => {
     }
     return false;
   }, []);
-
-  // useEffect(() => {
-  //   const connectSocket = async () => {
-  //     console.log(
-  //       "socketData",
-  //       socketData.pushSDKSocket?.connected,
-  //       socketData.isSDKSocketConnected
-  //     );
-  //     if (
-  //       socketData &&
-  //       socketData.pushSDKSocket &&
-  //       !socketData.pushSDKSocket?.connected
-  //     ) {
-  //       console.log("connect");
-  //       socketData.pushSDKSocket?.connect();
-  //       await sleep(1000);
-  //     }
-  //   };
-  //   connectSocket();
-  // }, [socketData]);
 
   useEffect(() => {
     const check = async () => {

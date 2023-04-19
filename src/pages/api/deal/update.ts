@@ -19,7 +19,6 @@ export default async function handler(
           id: body.dealId,
         },
       });
-      console.log(result);
       return res.status(200).json(result);
     } catch (error) {
       console.log(error);

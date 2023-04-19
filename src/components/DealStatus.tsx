@@ -55,14 +55,12 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
             router.query.workerAddress as string
           );
           if (Number(balance) > 0) {
-            console.log("has sbt", Number(balance));
             setHasSBT(true);
           }
         } else {
           // Worker
           const balance = await contract.contract?.balanceOf(address);
           if (Number(balance) > 0) {
-            console.log("has sbt", Number(balance));
             setHasSBT(true);
           }
         }
@@ -85,7 +83,6 @@ const DealStatus: React.FC<Props> = ({ deal }) => {
         const result = await fetchPendingTransactionHash(
           deal.multiSigAddress as string
         );
-        console.log("fetchPendingTransactionHash", result);
         if (result) {
           setProposed(true);
         }

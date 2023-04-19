@@ -100,7 +100,6 @@ const useSafe = () => {
           safeAddress,
           dealId,
         });
-        console.log(result.status, result.statusText, result.data);
         await sendEthToSafe(safeAddress, depositEthAmount);
       } else {
         alert("Wallet not connected");
@@ -118,7 +117,6 @@ const useSafe = () => {
       const safeSdk = await fetchSafeSDK(safeAddress);
       // Any address can be used. In this example you will use vitalik.eth
       const destination = address;
-      console.log("destination:", destination);
       const amount = ethers.utils
         .parseUnits(
           String(
@@ -153,7 +151,6 @@ const useSafe = () => {
           senderAddress: address,
           senderSignature: senderSignature.data,
         });
-        console.log("propose", safeAddress);
       }
     } finally {
       setIsLoading(false);
@@ -162,11 +159,9 @@ const useSafe = () => {
 
   // fetch pending transaction hash
   const fetchPendingTransactionHash = async (safeAddress: string) => {
-    console.log("fetchPendingTransactionHash", safeAddress);
     const safeService = fetchSafeService();
     // const safeAddress = await fetchSafe();
     if (safeService && signer && safeAddress) {
-      console.log("fetchPendingTransactionHash2");
       const pendingTransactions = await safeService.getPendingTransactions(
         safeAddress
       );
@@ -174,11 +169,9 @@ const useSafe = () => {
       const transaction = pendingTransactions.results[0];
       if (transaction) {
         const { safeTxHash } = transaction;
-        // console.log("fetchPendingTransactionHash3", pendingTransactions.results);
         return safeTxHash;
       }
     }
-    console.log("fetchPendingTransactionHash4");
   };
 
   // Confirm proposed transaction
@@ -220,7 +213,6 @@ const useSafe = () => {
       );
       const receipt = await executeTxResponse.transactionResponse?.wait();
 
-      console.log("Transaction executed:");
       if (receipt) {
         console.log(
           `https://goerli.etherscan.io/tx/${receipt.transactionHash}`
@@ -259,35 +251,6 @@ const useSafe = () => {
       setIsLoading(false);
     }
   };
-
-  // Reject safe proposed tx
-  // const rejectTransaction = async (
-  //   destinationAddress: string,
-  //   withdrawAmount: string
-  // ) => {
-  //   const destination = destinationAddress;
-  //   const amount = ethers.utils.parseUnits(withdrawAmount, "ether").toString();
-  //   const safeService = fetchSafeService();
-  //   const safeSdk = await fetchSafeSDK(safeAddress);
-  //   const safeTxHash = await fetchPendingTransactionHash(safeAddress);
-  //   if (safeService && safeSdk && safeTxHash) {
-  //     const safeTransactionData: SafeTransactionDataPartial = {
-  //       to: destination,
-  //       data: "0x",
-  //       value: amount,
-  //     };
-  //     const safeTransaction = await safeSdk.createTransaction({
-  //       safeTransactionData,
-  //     });
-  //     const rejectTx = await safeSdk.createRejectionTransaction(
-  //       safeTransaction.data.nonce
-  //     );
-
-  //     const executeTxResponse = await safeSdk.executeTransaction(rejectTx);
-  //     console.log("Transaction rejected:");
-  //     console.log(`https://goerli.etherscan.io/tx/${executeTxResponse}`);
-  //   }
-  // };
 
   return {
     isLoading,

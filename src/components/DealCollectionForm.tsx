@@ -6,7 +6,7 @@ import {
   FormLabel,
   Input,
   Textarea,
-  VStack
+  VStack,
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAddress } from "@thirdweb-dev/react";
@@ -25,7 +25,7 @@ const schema = yup.object().shape({
   specialNotes: yup.string(),
   deliveryDate: yup.string().required("納品完了日は必須です"),
   applicationDeadline: yup.string().required("応募期限は必須です"),
-  walletAddress: yup.string().required("ウォレットは必須です")
+  walletAddress: yup.string().required("ウォレットは必須です"),
 });
 
 type FormData = yup.InferType<typeof schema>;
@@ -34,11 +34,11 @@ export default function DealCollectionForm() {
   const router = useRouter();
   const address = useAddress();
   const { pushTarget } = usePush();
-  const { register, handleSubmit, reset, formState, setValue } = useForm<FormData>({
-    resolver: yupResolver(schema)
-  });
+  const { register, handleSubmit, reset, formState, setValue } =
+    useForm<FormData>({
+      resolver: yupResolver(schema),
+    });
   const onSubmit = async (data: FormData) => {
-    console.log(data);
     if (address) {
       try {
         setValue("walletAddress", address);
@@ -122,9 +122,7 @@ export default function DealCollectionForm() {
               <p>{formState.errors.deliveryDate.message}</p>
             )}
           </FormControl>
-          <FormControl
-            id="walletAddress"
-          >
+          <FormControl id="walletAddress">
             <FormLabel>Your Apply Wallet Address</FormLabel>
             <Input
               type="text"

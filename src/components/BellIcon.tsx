@@ -40,7 +40,6 @@ export function Bell() {
     const fetchnot = async () => {
       if (address) {
         const res = await fetchNotification();
-        console.log("notify", res);
         setNotifies(res.message);
       }
     };

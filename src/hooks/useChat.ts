@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 /* eslint-disable consistent-return */
 import * as PushAPI from "@pushprotocol/restapi";
 import { useAddress, useSigner } from "@thirdweb-dev/react";
@@ -15,21 +16,19 @@ const useChat = () => {
         let user = await PushAPI.user.get({
           account: `eip155:${address}`,
           // @ts-ignore
-          env: "staging"
+          env: "staging",
         });
         // ユーザーが作成されているけど公開鍵が登録されていない場合は再度権限が必要
         if (!user || !user.encryptedPrivateKey) {
           user = await PushAPI.user.create({
             account: address,
             // @ts-ignore
-            env: "staging"
+            env: "staging",
           });
         }
         return user;
       }
-    } catch (error: any) {
-      console.log(error);
-    }
+    } catch (error: any) {}
     return null;
   };
 
@@ -47,12 +46,11 @@ const useChat = () => {
         encryptedPGPPrivateKey: user.encryptedPrivateKey,
         signer: signer as PushAPI.SignerType,
         // @ts-ignore
-        env: "staging"
+        env: "staging",
       });
       setPgpDecryptedPvtKey(tempPgpDecryptedPvtKey);
       return tempPgpDecryptedPvtKey;
     }
-    console.log("failed fetch user");
   };
 
   const sendChatMessage = async (message: string, targetAddress: string) => {
@@ -67,14 +65,12 @@ const useChat = () => {
       signer: signer as PushAPI.SignerType,
       pgpPrivateKey: tempPgpDecryptedPvtKey,
       // @ts-ignore
-      env: "staging"
+      env: "staging",
     });
-    console.log("response", response);
   };
 
   const fetchListOfUserChatRequest = async (targetAddress: string) => {
     const user = await fetchUser();
-    console.log(user);
 
     const tempPgpDecryptedPvtKey = await fetchPgpDecryptedPvtKey();
     // actual api
@@ -83,15 +79,13 @@ const useChat = () => {
       toDecrypt: true,
       pgpPrivateKey: tempPgpDecryptedPvtKey,
       // @ts-ignore
-      env: "staging"
+      env: "staging",
     });
-    console.log(chatRequests);
     return chatRequests;
   };
 
   const fetchListOfUserChats = async () => {
     const user = await fetchUser();
-    console.log(user);
 
     const tempPgpDecryptedPvtKey = await fetchPgpDecryptedPvtKey();
     // actual api
@@ -100,9 +94,8 @@ const useChat = () => {
       toDecrypt: true,
       pgpPrivateKey: tempPgpDecryptedPvtKey,
       // @ts-ignore
-      env: "staging"
+      env: "staging",
     });
-    console.log(chatHistory);
     return chatHistory;
   };
 
@@ -111,7 +104,6 @@ const useChat = () => {
     kind: "latest" | "history"
   ) => {
     const user = await fetchUser();
-    console.log(user);
 
     const tempPgpDecryptedPvtKey = await fetchPgpDecryptedPvtKey();
 
@@ -120,11 +112,9 @@ const useChat = () => {
       account: `eip155:${address}`,
       conversationId: `eip155:${targetAddress}`, // receiver's address or chatId of a group
       // @ts-ignore
-      env: "staging"
+      env: "staging",
     });
-    console.log(conversationHash);
     if (!conversationHash.threadHash) {
-      console.log("No conversation history");
       return;
     }
 
@@ -136,9 +126,8 @@ const useChat = () => {
         toDecrypt: true,
         pgpPrivateKey: tempPgpDecryptedPvtKey,
         // @ts-ignore
-        env: "staging"
+        env: "staging",
       });
-      console.log(chatHistoryLatest);
       return chatHistoryLatest;
     }
     if (kind === "history") {
@@ -150,9 +139,8 @@ const useChat = () => {
         toDecrypt: true,
         pgpPrivateKey: tempPgpDecryptedPvtKey,
         // @ts-ignore
-        env: "staging"
+        env: "staging",
       });
-      console.log(chatHistory);
       return chatHistory;
     }
   };
@@ -163,9 +151,8 @@ const useChat = () => {
       account: address,
       senderAddress: targetAddress,
       // @ts-ignore
-      env: "staging"
+      env: "staging",
     });
-    console.log(response);
   };
 
   return {
@@ -173,7 +160,7 @@ const useChat = () => {
     approveRequest,
     fetchListOfUserChats,
     fetchChatConversationOfTwo,
-    fetchListOfUserChatRequest
+    fetchListOfUserChatRequest,
   };
 };
 

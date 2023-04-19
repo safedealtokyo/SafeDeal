@@ -14,7 +14,6 @@ export default async function handler(
   const { body } = req;
   if (req.method === "GET") {
     try {
-      console.log(req.query);
       const worker = await prisma.worker.findUnique({
         where: {
           dealId_walletAddress: {

@@ -10,7 +10,6 @@ export default async function handler(
   if (req.method === "GET") {
     try {
       const result = await fetchList();
-      console.log(result);
       return res.status(200).json(result);
     } catch (error) {
       console.log(error);

@@ -9,12 +9,14 @@ import React from "react";
 import { Message } from "./Messages";
 
 type Props = {
+  isFettching: boolean;
   inputMessage: string;
   setInputMessage: React.Dispatch<React.SetStateAction<string>>;
   handleSendMessage: () => void;
   fetchNewConversion: () => Promise<void>;
 };
 function Footer({
+  isFettching,
   inputMessage,
   setInputMessage,
   handleSendMessage,
@@ -38,7 +40,14 @@ function Footer({
         value={inputMessage}
         onChange={(e) => setInputMessage(e.target.value)}
       />
-      <RepeatIcon mx="8px" boxSize="6" onClick={fetchNewConversion} />
+      <RepeatIcon
+        mx="8px"
+        boxSize="6"
+        onClick={() => {
+          if (isFettching) return;
+          fetchNewConversion();
+        }}
+      />
       <Button
         bg="black"
         color="white"

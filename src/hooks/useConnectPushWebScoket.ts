@@ -27,17 +27,11 @@ const useConnectPushWebScoket = () => {
 
   useEffect(() => {
     const connectSocket = async () => {
-      console.log(
-        "socketData",
-        socketData.pushSDKSocket?.connected,
-        socketData.isSDKSocketConnected
-      );
       if (
         socketData &&
         socketData.pushSDKSocket &&
         !socketData.pushSDKSocket?.connected
       ) {
-        console.log("connect");
         socketData.pushSDKSocket?.connect();
         await sleep(1000);
       }
@@ -49,10 +43,6 @@ const useConnectPushWebScoket = () => {
   useEffect(() => {
     if (socketData.feedsSinceLastConnection[0]) {
       const last = socketData.feedsSinceLastConnection.length - 1;
-      console.log(
-        "feed",
-        socketData.feedsSinceLastConnection[last].payload.data.amsg
-      );
       setNotifyList((old: Message[]) => [
         ...old,
         {
@@ -69,7 +59,6 @@ const useConnectPushWebScoket = () => {
       //     timestamp: socketData.feedsSinceLastConnection[last].payload.epoch,
       //   },
       // ]);
-      console.log("notify", socketData.feedsSinceLastConnection[last].payload);
       infoToast(socketData.feedsSinceLastConnection[last].payload.data.amsg);
     }
   }, [socketData.feedsSinceLastConnection]);

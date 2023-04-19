@@ -11,9 +11,7 @@ export default async function handler(
   const { body } = req;
   if (req.method === "GET") {
     try {
-      console.log("req.query.dealId as string", req.query.dealId as string);
       const result = await fetchUnique(req.query.dealId as string);
-      console.log(result);
       return res.status(200).json(result);
     } catch (error) {
       console.log(error);

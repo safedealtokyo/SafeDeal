@@ -25,6 +25,7 @@ type Props = {
 const Chat: React.FC<Props> = ({ deal }) => {
   const router = useRouter();
   const address = useAddress();
+  const [isFettching, setIsFettching] = useState(false);
   const { fetchChatConversationOfTwo, sendChatMessage } = useChat();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
@@ -55,17 +56,17 @@ const Chat: React.FC<Props> = ({ deal }) => {
 
   // TODO ポーリング
   const fetchNewConversion = async () => {
-    const result = await fetchChatConversationOfTwo(
-      address?.toLowerCase() === deal.ownerAddress.toLowerCase()
-        ? (router.query.workerAddress as string)
-        : deal.ownerAddress,
-      "latest"
-    );
-    console.log(result);
     try {
+      setIsFettching(true);
+      const result = await fetchChatConversationOfTwo(
+        address?.toLowerCase() === deal.ownerAddress.toLowerCase()
+          ? (router.query.workerAddress as string)
+          : deal.ownerAddress,
+        "latest"
+      );
+
       // @ts-ignore
       if (result?.[0]?.timestamp > messages[messages.length - 1].timestamp) {
-        console.log("latest", result);
         if (result) {
           setMessages((old) => [
             ...old,
@@ -79,6 +80,8 @@ const Chat: React.FC<Props> = ({ deal }) => {
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsFettching(false);
     }
   };
 
@@ -92,13 +95,11 @@ const Chat: React.FC<Props> = ({ deal }) => {
             router.query.workerAddress as string,
             "history"
           );
-          console.log("conversionHistory", conversionHistory);
         } else {
           conversionHistory = await fetchChatConversationOfTwo(
             deal.ownerAddress,
             "history"
           );
-          console.log("conversionHistory", conversionHistory);
         }
 
         if (conversionHistory) {
@@ -138,6 +139,7 @@ const Chat: React.FC<Props> = ({ deal }) => {
         />
         <Divider />
         <Footer
+          isFettching={isFettching}
           fetchNewConversion={fetchNewConversion}
           inputMessage={inputMessage}
           setInputMessage={setInputMessage}

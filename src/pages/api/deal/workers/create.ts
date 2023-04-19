@@ -18,7 +18,6 @@ export default async function handler(
           walletAddress: req.body.walletAddress,
         },
       });
-      console.log("user exist", user);
       if (!user) {
         user = await prisma.user.create({
           data: {

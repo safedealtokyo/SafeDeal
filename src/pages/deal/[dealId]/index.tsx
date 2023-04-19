@@ -52,9 +52,6 @@ export default function Protected({ deal }: Props) {
   const { pushTarget } = usePush();
   const isClient = useMemo(() => {
     if (address && tempDeal) {
-      console.log(
-        address.toLowerCase() === tempDeal.ownerAddress.toLowerCase()
-      );
       return address.toLowerCase() === tempDeal.ownerAddress.toLowerCase();
     }
     return false;
@@ -63,7 +60,6 @@ export default function Protected({ deal }: Props) {
   const chatWithClient = async () => {
     // Notify to Client
     if (tempDeal) {
-      console.log("notify", tempDeal.ownerAddress);
       await pushTarget("Chat Start", "Chat Start", tempDeal.ownerAddress);
       // Create record
       await axios.post("/api/deal/workers/create", {
@@ -148,7 +144,6 @@ export default function Protected({ deal }: Props) {
 
 export async function getServerSideProps(context: NextPageContext) {
   const deal = await fetchUnique(context.query.dealId as string);
-  console.log(deal);
   return {
     props: {
       deal: JSON.stringify(deal),

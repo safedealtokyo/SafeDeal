@@ -14,7 +14,7 @@ export const useSDKSocket = ({
   account,
   env = "staging",
   chainId,
-  isCAIP
+  isCAIP,
 }: SDKSocketHookOptions) => {
   const [pushSDKSocket, setPushSDKSocket] = useState<any>(null);
   const [feedsSinceLastConnection, setFeedsSinceLastConnection] = useState<any>(
@@ -28,13 +28,11 @@ export const useSDKSocket = ({
   const addSocketEvents = () => {
     // console.warn('\n--> addSocketEvents');
     pushSDKSocket?.on(EVENTS.CONNECT, () => {
-      // console.log('CONNECTED: ');
       setIsSDKSocketConnected(true);
       setLastConnectionTimestamp(new Date().toUTCString());
     });
 
     pushSDKSocket?.on(EVENTS.DISCONNECT, () => {
-      // console.log('DIS-CONNECTED: ');
       setIsSDKSocketConnected(false);
       setFeedsSinceLastConnection([]);
       setLastConnectionTimestamp("");
@@ -52,7 +50,7 @@ export const useSDKSocket = ({
       // do stuff with data
       setFeedsSinceLastConnection((oldFeeds: any) => [
         ...oldFeeds,
-        ...feedArray
+        ...feedArray,
       ]);
     });
   };
@@ -93,7 +91,7 @@ export const useSDKSocket = ({
         user: account,
         // @ts-ignore
         env,
-        socketOptions: { autoConnect: false }
+        socketOptions: { autoConnect: false },
       });
       // console.warn('new connection object: ', connectionObject);
       // set to context
@@ -106,6 +104,6 @@ export const useSDKSocket = ({
     pushSDKSocket,
     isSDKSocketConnected,
     feedsSinceLastConnection,
-    lastConnectionTimestamp
+    lastConnectionTimestamp,
   };
 };

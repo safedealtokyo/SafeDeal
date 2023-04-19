@@ -17,7 +17,6 @@ export default function Web3LoginButton() {
         return;
       }
     } catch (error) {
-      console.log(error);
       window.alert("error");
     }
   };
